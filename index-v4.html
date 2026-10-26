@@ -1,0 +1,2824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1e3a8a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Smart Luggage & Bags POS Pro</title>
+<style>
+:root {
+  --primary: #1e3a8a;
+  --primary-light: #2563eb;
+  --secondary: #0d9488;
+  --bg: #f1f5f9;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #cbd5e1;
+  --danger: #dc2626;
+  --success: #16a34a;
+  --warning: #d97706;
+  --radius: 12px;
+  --shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  padding-bottom: 82px;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Header */
+header {
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  color: #fff;
+  padding: 10px 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.16);
+  flex-wrap: wrap;
+}
+
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.store-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: rgba(255,255,255,0.2);
+  border: 1.5px solid rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.brand-info h1 {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+
+.brand-info p {
+  font-size: 0.68rem;
+  opacity: 0.92;
+}
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Zero-Popup Inline Language Pills */
+.lang-pills {
+  display: inline-flex;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.35);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lang-btn {
+  background: transparent;
+  color: #fff;
+  border: none;
+  padding: 5px 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lang-btn.active {
+  background: #ffffff;
+  color: var(--primary);
+}
+
+.hdr-btn {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 8px;
+  padding: 5px 9px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* Universal Responsive Container */
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+/* Inline Status Bar (Zero Popups) */
+.inline-banner {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+.banner-success { background: #dcfce7; color: #14532d; border: 1px solid #86efac; }
+.banner-danger { background: #fee2e2; color: #7f1d1d; border: 1px solid #fca5a5; }
+.banner-warning { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
+
+@media (min-width: 768px) {
+  .pos-layout {
+    display: grid;
+    grid-template-columns: 1.32fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Responsive Grids */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+
+@media (max-width: 440px) {
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+}
+
+/* Form Controls */
+.form-group { margin-bottom: 8px; }
+.form-group label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 0.85rem;
+  background: #fff;
+  color: var(--text);
+  outline: none;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
+}
+
+/* Inline Option Pills (Replaces native <select> popups) */
+.pill-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.opt-pill {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  color: var(--text);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.opt-pill.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+}
+.btn:active { transform: scale(0.98); opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--secondary); color: #fff; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-warning { background: var(--warning); color: #fff; }
+.btn-outline { background: #f8fafc; border: 1px solid var(--border); color: var(--text); }
+.btn-sm { padding: 6px 10px; font-size: 0.72rem; width: auto; }
+.btn-cancel {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+  width: auto;
+  flex-shrink: 0;
+}
+
+/* Horizontal Category Bar */
+.cat-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-top: 8px;
+  scrollbar-width: none;
+}
+.cat-bar::-webkit-scrollbar { display: none; }
+.cat-pill {
+  padding: 5px 11px;
+  border-radius: 20px;
+  background: #e2e8f0;
+  color: var(--text);
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+}
+.cat-pill.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+  gap: 8px;
+  max-height: 410px;
+  overflow-y: auto;
+}
+
+.product-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: border-color 0.15s;
+}
+
+.product-img {
+  width: 100%;
+  height: 78px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #eff6ff;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.product-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 2px;
+  cursor: pointer;
+}
+
+.product-meta {
+  font-size: 0.67rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.product-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.set-split-drawer {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border);
+  display: none;
+}
+
+.badge {
+  font-size: 0.62rem;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-weight: 800;
+}
+.badge-set { background: #dbeafe; color: #1e40af; }
+.badge-loose { background: #fef3c7; color: #92400e; }
+.badge-low { background: #fee2e2; color: #991b1b; }
+.badge-ok { background: #dcfce7; color: #166534; }
+
+/* Cart & Bargaining */
+.cart-list {
+  max-height: 200px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+}
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 7px 0;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.78rem;
+  gap: 6px;
+}
+
+.highlight-box {
+  background: #fefce8;
+  border: 1px solid #fde047;
+  border-radius: 8px;
+  padding: 9px;
+  margin-bottom: 8px;
+}
+
+/* Stat Cards */
+.stat-card {
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+.stat-card .lbl { font-size: 0.68rem; color: var(--text-muted); font-weight: 700; }
+.stat-card .val { font-size: 1.02rem; font-weight: 900; color: var(--primary); margin-top: 3px; }
+
+/* Master Toggle Switch */
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid #f1f5f9;
+  gap: 10px;
+}
+.toggle-title { font-size: 0.8rem; font-weight: 800; }
+.toggle-desc { font-size: 0.68rem; color: var(--text-muted); }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+  position: absolute; cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #94a3b8;
+  transition: .2s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute; content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: .2s;
+  border-radius: 50%;
+}
+input:checked + .slider { background-color: var(--success); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* Views & Bottom Navigation */
+.view { display: none; }
+.view.active { display: block; }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  height: 62px;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+}
+
+.nav-btn {
+  flex: 1;
+  border: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 700;
+}
+.nav-btn.active {
+  color: var(--primary);
+  font-weight: 900;
+  background: #eff6ff;
+}
+.nav-btn .ico {
+  font-size: 1.15rem;
+  margin-bottom: 2px;
+}
+
+.table-list {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.74rem;
+}
+.table-list th, .table-list td {
+  padding: 7px 5px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-wrap" onclick="openAdminTab()" title="Tap to change Shop Logo & Business Profile">
+    <div class="store-logo" id="hdrLogoBox">🧳</div>
+    <div class="brand-info">
+      <h1 id="hdrStoreName">Royal Bags & Luggage</h1>
+      <p id="hdrTagline">Retail & Wholesale POS</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="lang-pills">
+      <button class="lang-btn active" id="langBtn_en" onclick="setLanguage('en')">EN</button>
+      <button class="lang-btn" id="langBtn_hi" onclick="setLanguage('hi')">हिंदी</button>
+      <button class="lang-btn" id="langBtn_gu" onclick="setLanguage('gu')">ગુજરાતી</button>
+    </div>
+    <button class="hdr-btn" id="adminStatusBtn" onclick="openAdminTab()">🔒 Staff</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ZERO-POPUP INLINE NOTIFICATION BANNER -->
+  <div id="inlineBanner" class="inline-banner">
+    <span id="bannerMsg">Ready</span>
+    <button class="btn-cancel" onclick="hideBanner()">❌</button>
+  </div>
+
+  <!-- ========================================================
+       TAB 1: COUNTER BILLING & SMART BARGAIN POS
+       ======================================================== -->
+  <div id="viewPos" class="view active">
+    <div class="pos-layout">
+
+      <!-- Left Column: Search, Categories & Product Grid -->
+      <div>
+        <div class="card" style="padding: 10px;">
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="posSearch" placeholder="Search bag name, brand, color, size..." oninput="renderPosProducts()">
+            <button class="btn btn-outline btn-sm" id="btnMicSearch" onclick="runVoiceSearch()">🎤</button>
+            <button class="btn-cancel" onclick="clearSearch()">❌</button>
+          </div>
+          <div class="cat-bar" id="posCategoryBar"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span id="lblStockHeader">Available Bags & Sets (Tap to Bill)</span>
+            <span id="lowStockHeaderBadge" class="badge badge-low" style="display:none;">⚠️ Low Stock</span>
+          </div>
+          <div class="product-grid" id="posProductGrid"></div>
+        </div>
+      </div>
+
+      <!-- Right Column: Active Bill, Bargaining, Split Pay & Checkout -->
+      <div>
+        <div class="card">
+          <div class="card-header">
+            <span id="lblBillHeader">Smart Counter Bill</span>
+            <button class="btn-cancel" id="btnClearCart" onclick="clearCart()">Clear ❌</button>
+          </div>
+
+          <!-- Active Staff Selector Pills -->
+          <div style="margin-bottom:8px;">
+            <label style="font-size:0.68rem; font-weight:700; color:var(--text-muted);" id="lblActiveStaff">Salesperson / Counter Staff:</label>
+            <div class="pill-group" id="posStaffPills" style="margin-top:3px;"></div>
+          </div>
+
+          <!-- Cart Items -->
+          <div id="cartContainer" class="cart-list"></div>
+
+          <!-- Custom Extra Item / Quick Counter Entry (When item isn't in stock list yet) -->
+          <div style="margin-bottom:8px; padding:6px; background:#f8fafc; border-radius:8px; border:1px dashed var(--border);">
+            <div style="font-size:0.68rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;" id="lblQuickCustomItem">+ Quick Custom Bag / Repair / Accessory Entry:</div>
+            <div style="display:flex; gap:5px;">
+              <input type="text" id="customItemName" placeholder="Item Name (e.g. School Bag)" style="flex:1.4; padding:6px 8px; font-size:0.76rem;">
+              <input type="number" id="customItemPrice" placeholder="MRP ₹" style="flex:0.8; padding:6px 8px; font-size:0.76rem;">
+              <button class="btn btn-primary btn-sm" onclick="addCustomCartItem()">+ Add</button>
+            </div>
+          </div>
+
+          <!-- Warranty / Serial Note -->
+          <div id="boxWarranty" class="form-group">
+            <label id="lblWarranty">Warranty / Serial No. & Terms</label>
+            <div style="display:flex; gap:6px;">
+              <input type="text" id="billWarrantyInput" placeholder="e.g. VIP 3 Yr Warranty">
+              <button class="btn-cancel" onclick="document.getElementById('billWarrantyInput').value=''">❌</button>
+            </div>
+          </div>
+
+          <!-- Smart Bargaining Module -->
+          <div id="boxBargain" class="highlight-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <span style="font-size:0.78rem; font-weight:800; color:#854d0e;" id="lblBargainBox">Smart Bargaining Calculator</span>
+              <span id="floorPriceBadge" class="badge badge-loose">Floor Guard Active</span>
+            </div>
+            <div class="grid-2">
+              <div>
+                <label style="font-size:0.7rem; color:var(--text-muted);" id="lblTotalMrp">Total MRP ₹</label>
+                <div id="cartTotalMrp" style="font-size:1.05rem; font-weight:900;">₹0</div>
+              </div>
+              <div>
+                <label style="font-size:0.7rem; color:#854d0e; font-weight:700;" id="lblCustomerBargain">Customer Final Bargain ₹</label>
+                <div style="display:flex; gap:4px;">
+                  <input type="number" id="bargainFinalInput" placeholder="Final ₹" oninput="recalcBillTotals()">
+                  <button class="btn-cancel" onclick="resetBargainToMrp()">❌</button>
+                </div>
+              </div>
+            </div>
+            <div id="bargainDiscountSummary" style="font-size:0.74rem; font-weight:800; color:var(--success); margin-top:5px;"></div>
+
+            <!-- Inline Admin Override if Bargain < Floor Price -->
+            <div id="inlineFloorOverride" style="display:none; margin-top:6px; padding:6px; background:#fee2e2; border-radius:6px; border:1px solid #fca5a5;">
+              <div style="font-size:0.72rem; color:#991b1b; font-weight:700; margin-bottom:4px;">⚠️ Below Floor Cost! Enter Admin PIN (1234):</div>
+              <div style="display:flex; gap:6px;">
+                <input type="password" id="overridePinInput" placeholder="PIN (1234)">
+                <button class="btn btn-danger btn-sm" onclick="approveFloorOverride()">Approve</button>
+                <button class="btn-cancel" onclick="resetBargainToMrp()">❌</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Auto GST Calculator (All Slabs + Inclusive/Exclusive Toggle) -->
+          <div id="boxGst" class="card" style="padding:8px; margin-bottom:8px; background:#f8fafc; display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+              <label style="font-size:0.7rem; font-weight:700;">Auto GST Slab:</label>
+              <div class="pill-group" id="gstModePills">
+                <button type="button" class="opt-pill active" id="gstModeExcl" onclick="setGstMode('exclusive')">+ Add GST</button>
+                <button type="button" class="opt-pill" id="gstModeIncl" onclick="setGstMode('inclusive')">GST Included</button>
+              </div>
+            </div>
+            <div class="pill-group" id="gstSlabPills" style="margin-bottom:6px;">
+              <button type="button" class="opt-pill" onclick="setGstSlab(0)">0%</button>
+              <button type="button" class="opt-pill" onclick="setGstSlab(5)">5%</button>
+              <button type="button" class="opt-pill" onclick="setGstSlab(12)">12%</button>
+              <button type="button" class="opt-pill active" onclick="setGstSlab(18)">18%</button>
+              <button type="button" class="opt-pill" onclick="setGstSlab(28)">28%</button>
+            </div>
+            <div id="gstBreakdownText" style="font-size:0.72rem; color:var(--text-muted); font-weight:700;"></div>
+          </div>
+
+          <!-- Grand Total Payable Banner -->
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#eff6ff; padding:8px 10px; border-radius:8px; margin-bottom:8px; border:1px solid #bfdbfe;">
+            <span style="font-size:0.82rem; font-weight:800; color:var(--primary);" id="lblNetPayable">Net Payable Amount:</span>
+            <span id="grandTotalPayable" style="font-size:1.15rem; font-weight:900; color:var(--primary);">₹0</span>
+          </div>
+
+          <!-- Split Payment Gateway -->
+          <div id="boxSplitPay" class="card" style="padding:8px; margin-bottom:8px; background:#f8fafc;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px; flex-wrap:wrap; gap:4px;">
+              <label style="font-size:0.72rem; font-weight:700;" id="lblSplitTitle">Split Payment (Cash / UPI / Credit)</label>
+              <div class="pill-group">
+                <button type="button" class="opt-pill" onclick="setQuickSplit('cash')">100% Cash</button>
+                <button type="button" class="opt-pill" onclick="setQuickSplit('upi')">100% UPI</button>
+                <button type="button" class="opt-pill" onclick="setQuickSplit('half')">50-50 Split</button>
+                <button type="button" class="opt-pill" onclick="setQuickSplit('credit')">Credit</button>
+              </div>
+            </div>
+            <div class="grid-3">
+              <div>
+                <label style="font-size:0.68rem;" id="lblCash">Cash ₹</label>
+                <input type="number" id="payCashInput" placeholder="0" oninput="autoBalanceSplit('cash')">
+              </div>
+              <div>
+                <label style="font-size:0.68rem;" id="lblUpi">UPI / Online ₹</label>
+                <input type="number" id="payUpiInput" placeholder="0" oninput="autoBalanceSplit('upi')">
+              </div>
+              <div>
+                <label style="font-size:0.68rem;" id="lblCredit">Credit (Udhaar) ₹</label>
+                <input type="number" id="payCreditInput" placeholder="0" oninput="autoBalanceSplit('credit')">
+              </div>
+            </div>
+          </div>
+
+          <!-- Customer Info -->
+          <div class="grid-2" style="margin-bottom:8px;">
+            <input type="text" id="custName" placeholder="Customer Name (Optional)">
+            <input type="tel" id="custPhone" placeholder="WhatsApp / Mobile No.">
+          </div>
+
+          <!-- Checkout Buttons -->
+          <div class="grid-2" style="margin-bottom:6px;">
+            <button class="btn btn-primary" id="btnDirectSaveAction" onclick="processCheckout('direct')">⚡ Direct Save (No Bill)</button>
+            <button class="btn btn-success" id="btnWaBillAction" onclick="processCheckout('whatsapp')">💬 WhatsApp Receipt</button>
+          </div>
+          <div class="grid-2">
+            <button class="btn btn-secondary" id="btnSmsBillAction" onclick="processCheckout('sms')">📩 SMS Receipt</button>
+            <button class="btn btn-outline" id="btnPreviewBillAction" onclick="previewLastBill()">🧾 View / Print Bill</button>
+          </div>
+
+          <!-- Inline Receipt Preview Box -->
+          <div id="inlineReceiptPreview" style="display:none; margin-top:10px; padding:10px; background:#fff; border:2px dashed #64748b; border-radius:8px; font-family:monospace; font-size:0.74rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+              <strong>RECEIPT PREVIEW</strong>
+              <div style="display:flex; gap:6px;">
+                <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print</button>
+                <button class="btn-cancel" onclick="document.getElementById('inlineReceiptPreview').style.display='none'">❌</button>
+              </div>
+            </div>
+            <div id="receiptLogoPreview" style="text-align:center; margin-bottom:6px;"></div>
+            <div id="receiptContentArea" style="white-space:pre-wrap; line-height:1.35;"></div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================
+       TAB 2: STOCK, CATEGORIES & SET BREAKING
+       ======================================================== -->
+  <div id="viewStock" class="view">
+
+    <!-- Category Manager -->
+    <div class="card">
+      <div class="card-header">
+        <span id="lblCatMgr">Unlimited Categories Manager (Add / Remove ❌)</span>
+      </div>
+      <div style="display:flex; gap:6px; margin-bottom:8px;">
+        <input type="text" id="newCatInput" placeholder="New Category (e.g. Trolley Set, School Bag, Duffle, Ladies Purse)">
+        <button class="btn btn-primary btn-sm" onclick="addCategory()">+ Add</button>
+      </div>
+      <div id="categoryManageList" class="cat-bar"></div>
+    </div>
+
+    <!-- Add / Edit Bag Stock -->
+    <div class="card">
+      <div class="card-header">
+        <span id="stockFormTitle">Add / Update Bag & Luggage Stock</span>
+        <button class="btn-cancel" onclick="resetStockForm()">Clear ❌</button>
+      </div>
+      <input type="hidden" id="editProdId">
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Product / Model Name *</label>
+          <input type="text" id="stName" placeholder="e.g. VIP Skyway 3-Pc Set">
+        </div>
+        <div class="form-group">
+          <label>Brand Name *</label>
+          <input type="text" id="stBrand" placeholder="e.g. VIP, Safari, Skybags, Aristocrat">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Select Category (Tap Pill)</label>
+        <div class="pill-group" id="stCategoryPills"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Select Exact Size / Set Type (Tap Pill)</label>
+        <div class="pill-group" id="stSizePills">
+          <button type="button" class="opt-pill active" onclick="selectSizePill('3-Piece Set (L+M+S)', this)">3-Piece Set (L+M+S)</button>
+          <button type="button" class="opt-pill" onclick="selectSizePill('2-Piece Set (M+S)', this)">2-Piece Set (M+S)</button>
+          <button type="button" class="opt-pill" onclick="selectSizePill('2-Piece Set (L+M)', this)">2-Piece Set (L+M)</button>
+          <button type="button" class="opt-pill" onclick="selectSizePill('Cabin (20 inch)', this)">Cabin (20 inch)</button>
+          <button type="button" class="opt-pill" onclick="selectSizePill('Medium (24 inch)', this)">Medium (24 inch)</button>
+          <button type="button" class="opt-pill" onclick="selectSizePill('Large (28 inch)', this)">Large (28 inch)</button>
+          <button type="button" class="opt-pill" onclick="selectSizePill('Standard / Regular', this)">Standard / Regular</button>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Exact Color</label>
+          <input type="text" id="stColor" placeholder="e.g. Wine Red, Navy Blue, Matte Black">
+        </div>
+        <div class="form-group">
+          <label>Supplier Name (Tap Pill or Type Below)</label>
+          <input type="text" id="stSupplier" placeholder="e.g. VIP Official Distributor">
+          <div class="pill-group" id="stSupplierQuickPills" style="margin-top:4px;"></div>
+        </div>
+      </div>
+
+      <div class="grid-4">
+        <div class="form-group">
+          <label>Min Floor Cost ₹</label>
+          <input type="number" id="stFloor" placeholder="1500">
+        </div>
+        <div class="form-group">
+          <label>Sticker MRP ₹ *</label>
+          <input type="number" id="stMrp" placeholder="3500">
+        </div>
+        <div class="form-group">
+          <label>Shop Floor Qty</label>
+          <input type="number" id="stQtyFloor" placeholder="5">
+        </div>
+        <div class="form-group">
+          <label>Godown Stock Qty</label>
+          <input type="number" id="stQtyGodown" placeholder="10">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Bag Photo (Click Directly from Camera or Upload from Gallery — Auto-Compressed)</label>
+        <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+          <label class="btn btn-outline btn-sm" style="cursor:pointer; flex:1;">
+            📷 Click from Camera <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handlePhotoSelect(event)">
+          </label>
+          <label class="btn btn-outline btn-sm" style="cursor:pointer; flex:1;">
+            🖼️ Upload from Gallery <input type="file" accept="image/*" style="display:none;" onchange="handlePhotoSelect(event)">
+          </label>
+          <button type="button" class="btn-cancel" onclick="clearTempStockPhoto()">Remove Photo ❌</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+          <img id="stPhotoThumb" src="" style="display:none; width:48px; height:48px; border-radius:6px; object-fit:cover; border:1px solid var(--border);">
+          <span id="photoPreviewStatus" style="font-size:0.72rem; color:var(--success); font-weight:700;"></span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="saveStockItem()">💾 Save Product to Inventory</button>
+    </div>
+
+    <!-- Set Breaking Module -->
+    <div class="card" id="boxSetBreakTool">
+      <div class="card-header">
+        <span>✂️ Smart Set Breaking Tool (Sell 1 Bag from Set of 2 or 3)</span>
+      </div>
+      <p style="font-size:0.74rem; color:var(--text-muted); margin-bottom:8px;">
+        Tap any 3-piece or 2-piece set below, choose which piece was sold, and the app automatically keeps the remaining exact sizes & colors in stock! (You can also break sets directly on the Billing screen).
+      </p>
+      <div class="form-group">
+        <label>1. Tap Set in Stock to Break:</label>
+        <div class="pill-group" id="brkSetPills"></div>
+      </div>
+      <div class="form-group">
+        <label>2. Tap Which Piece Was Sold / Separated:</label>
+        <div class="pill-group" id="brkPiecePills">
+          <button type="button" class="opt-pill active" onclick="selectBreakPiece('Cabin (20 inch)', this)">Cabin (20 inch) Sold</button>
+          <button type="button" class="opt-pill" onclick="selectBreakPiece('Medium (24 inch)', this)">Medium (24 inch) Sold</button>
+          <button type="button" class="opt-pill" onclick="selectBreakPiece('Large (28 inch)', this)">Large (28 inch) Sold</button>
+        </div>
+      </div>
+      <button class="btn btn-secondary" onclick="breakSelectedSet()">✂️ Break Set & Keep Remaining Bags in Stock</button>
+    </div>
+
+    <!-- Full Stock Table -->
+    <div class="card">
+      <div class="card-header">
+        <span>Complete Inventory List (Shop Floor + Godown)</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="table-list" id="inventoryTable"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================
+       TAB 3: STAFF, SHIFT & INCENTIVE MANAGEMENT
+       ======================================================== -->
+  <div id="viewStaff" class="view">
+
+    <div class="card" id="boxShiftManage">
+      <div class="card-header">
+        <span>⏱️ Shift & Cash Drawer Management</span>
+        <span id="shiftBadge" class="badge badge-ok">Shift Active</span>
+      </div>
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Opening Drawer Cash ₹</label>
+          <input type="number" id="shiftOpenCash" placeholder="2000">
+        </div>
+        <div class="form-group">
+          <label>Shift Note / Timing</label>
+          <input type="text" id="shiftNote" placeholder="Morning 9AM - 9PM">
+        </div>
+        <div class="form-group">
+          <label>Start / Close Shift</label>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-success btn-sm" style="flex:1;" onclick="startNewShift()">Start</button>
+            <button class="btn btn-danger btn-sm" style="flex:1;" onclick="closeCurrentShift()">Close</button>
+          </div>
+        </div>
+      </div>
+      <div id="shiftSummaryLine" style="font-size:0.74rem; color:var(--text-muted); font-weight:700;"></div>
+    </div>
+
+    <div class="card" id="boxStaffManage">
+      <div class="card-header">
+        <span id="staffFormTitle">👥 Unlimited Staff Management (Add / Edit / Remove ❌)</span>
+        <button class="btn-cancel" onclick="resetStaffForm()">Clear ❌</button>
+      </div>
+      <input type="hidden" id="editStaffId">
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Staff Name</label>
+          <input type="text" id="stfNameInput" placeholder="e.g. Ramesh Bhai">
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="tel" id="stfPhoneInput" placeholder="9876543210">
+        </div>
+        <div class="form-group">
+          <label>Default Incentive %</label>
+          <div style="display:flex; gap:6px;">
+            <input type="number" id="stfIncRate" placeholder="2">
+            <button class="btn btn-primary btn-sm" onclick="saveStaffMember()">💾 Save</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="highlight-box" style="margin-top:8px;">
+        <div style="font-size:0.78rem; font-weight:800; margin-bottom:6px;">🧮 Manual Staff Incentive Calculator (Tap Staff)</div>
+        <div class="pill-group" id="calcStaffPills" style="margin-bottom:8px;"></div>
+        <div class="grid-2">
+          <div>
+            <label style="font-size:0.68rem;">Commission % on Sales</label>
+            <input type="number" id="calcCommPct" value="2" oninput="calculateStaffIncentive()">
+          </div>
+          <div>
+            <label style="font-size:0.68rem;">Extra Manual Bonus ₹</label>
+            <input type="number" id="calcFixedBonus" value="0" oninput="calculateStaffIncentive()">
+          </div>
+        </div>
+        <div id="staffIncentiveResult" style="margin-top:6px; font-size:0.8rem; font-weight:800; color:var(--primary);"></div>
+      </div>
+
+      <div style="overflow-x:auto; margin-top:8px;">
+        <table class="table-list" id="staffReportTable"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================
+       TAB 4: SUPPLIER KHATA & DAILY EXPENSES
+       ======================================================== -->
+  <div id="viewKhata" class="view">
+
+    <div class="card" id="boxSupplierKhata">
+      <div class="card-header">
+        <span id="supFormTitle">📒 Supplier Khata (Bills, Partial Payments & Stock Supplied)</span>
+        <button class="btn-cancel" onclick="resetSupplierForm()">Clear ❌</button>
+      </div>
+      <input type="hidden" id="editSupplierId">
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Supplier / Factory Name</label>
+          <input type="text" id="supName" placeholder="e.g. Mumbai Bag House">
+        </div>
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <input type="tel" id="supPhone" placeholder="9820012345">
+        </div>
+        <div class="form-group">
+          <label>Which Stock Supplied (Brands/Items)</label>
+          <input type="text" id="supItems" placeholder="VIP, Skybags, Backpacks">
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Total Purchase Bill ₹</label>
+          <input type="number" id="supBillAmt" placeholder="50000">
+        </div>
+        <div class="form-group">
+          <label>Paid Amount ₹</label>
+          <input type="number" id="supPaidAmt" placeholder="20000">
+        </div>
+        <div class="form-group">
+          <label>Save Supplier Entry</label>
+          <button class="btn btn-secondary" onclick="saveSupplierKhata()">💾 Save Supplier Khata</button>
+        </div>
+      </div>
+
+      <!-- Custom Partial Payment Bar -->
+      <div style="padding:8px; background:#f8fafc; border-radius:8px; border:1px solid var(--border); margin-top:6px;">
+        <label style="font-size:0.7rem; font-weight:700; display:block; margin-bottom:4px;">💰 Record Custom Payment to Supplier (Tap Supplier Below):</label>
+        <div class="pill-group" id="paySupPills" style="margin-bottom:6px;"></div>
+        <div style="display:flex; gap:6px;">
+          <input type="number" id="customSupPayAmt" placeholder="Enter Payment Amount ₹ (e.g. 5000)">
+          <button class="btn btn-success btn-sm" onclick="recordCustomSupplierPay()">Pay ₹</button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto; margin-top:8px;">
+        <table class="table-list" id="supplierTable"></table>
+      </div>
+    </div>
+
+    <div class="card" id="boxDailyExpenses">
+      <div class="card-header">
+        <span>💸 Daily Shop Expenses Tracker</span>
+      </div>
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Expense Detail</label>
+          <input type="text" id="expTitle" placeholder="Tea, Transport, Packing, Light Bill">
+        </div>
+        <div class="form-group">
+          <label>Amount ₹</label>
+          <input type="number" id="expAmt" placeholder="150">
+        </div>
+        <div class="form-group">
+          <label>Add Expense</label>
+          <button class="btn btn-warning" onclick="addDailyExpense()">+ Add Expense</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto; margin-top:8px;">
+        <table class="table-list" id="expenseTable"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================
+       TAB 5: SMART DASHBOARD & REPORTS
+       ======================================================== -->
+  <div id="viewDashboard" class="view">
+
+    <div class="card">
+      <div class="card-header">
+        <span>📊 Real-Time Business Tracker & Smart Dashboard</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-success btn-sm" onclick="sendReportToOwner('whatsapp')">💬 WhatsApp Report</button>
+          <button class="btn btn-secondary btn-sm" onclick="sendReportToOwner('sms')">📩 SMS Report</button>
+        </div>
+      </div>
+
+      <div class="grid-4" style="margin-bottom:12px;">
+        <div class="stat-card">
+          <div class="lbl">Total Sales Revenue</div>
+          <div class="val" id="statTotalSales">₹0</div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Cash + UPI Collected</div>
+          <div class="val" id="statCollected" style="color:var(--success);">₹0</div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Daily Shop Expenses</div>
+          <div class="val" id="statExpenses" style="color:var(--danger);">₹0</div>
+        </div>
+        <div class="stat-card">
+          <div class="lbl">Supplier Pending Khata</div>
+          <div class="val" id="statSupplierDue" style="color:var(--warning);">₹0</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="margin-bottom:0;">
+          <div class="card-header"><span>🏆 Best Seller Products</span></div>
+          <div id="bestSellersList" style="font-size:0.76rem;"></div>
+        </div>
+
+        <div class="card" style="margin-bottom:0;">
+          <div class="card-header"><span>🚨 Low Stock Alert (Reorder Soon)</span></div>
+          <div id="lowStockList" style="font-size:0.76rem;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <span>🧾 Recent Sales & Direct Entries History</span>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="table-list" id="salesHistoryTable"></table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================
+       TAB 6: ADMIN PERMISSIONS, PROFILE, LOGO & MASTER TOGGLES
+       ======================================================== -->
+  <div id="viewAdmin" class="view">
+
+    <!-- Admin Security Lock -->
+    <div class="card">
+      <div class="card-header">
+        <span>🔐 Admin Permission & Security Lock</span>
+        <span id="adminBadgeText" class="badge badge-low">Locked (Staff Mode)</span>
+      </div>
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Enter Admin PIN (Default: 1234)</label>
+          <input type="password" id="admPinInput" placeholder="1234">
+        </div>
+        <div class="form-group">
+          <label>Unlock / Lock Admin</label>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-primary btn-sm" style="flex:1;" onclick="unlockAdmin()">Unlock 🔓</button>
+            <button class="btn btn-outline btn-sm" style="flex:1;" onclick="lockAdmin()">Lock 🔒</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Change Admin PIN</label>
+          <div style="display:flex; gap:6px;">
+            <input type="text" id="newAdminPinInput" placeholder="New PIN">
+            <button class="btn btn-secondary btn-sm" onclick="changeAdminPin()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Business Profile & Shop Logo (Camera + Gallery) -->
+    <div class="card">
+      <div class="card-header">
+        <span>🏪 Business Profile & Shop Logo Management (Change Anytime)</span>
+      </div>
+
+      <!-- Shop Logo Direct Camera / Gallery Uploader -->
+      <div class="highlight-box" style="margin-bottom:10px;">
+        <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+          <div id="adminLogoPreviewBox" style="width:64px; height:64px; border-radius:12px; background:#e2e8f0; border:2px solid var(--primary); display:flex; align-items:center; justify-content:center; font-size:2rem; overflow:hidden; flex-shrink:0;">
+            🧳
+          </div>
+          <div style="flex:1; min-width:200px;">
+            <div style="font-size:0.8rem; font-weight:800; margin-bottom:5px;">Shop Profile Logo (Click from Camera or Upload from Gallery)</div>
+            <div style="display:flex; gap:6px; flex-wrap:wrap;">
+              <label class="btn btn-primary btn-sm" style="cursor:pointer;">
+                📷 Click Camera <input type="file" accept="image/*" capture="environment" style="display:none;" onchange="handleLogoUpload(event)">
+              </label>
+              <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+                🖼️ From Gallery <input type="file" accept="image/*" style="display:none;" onchange="handleLogoUpload(event)">
+              </label>
+              <button type="button" class="btn-cancel" onclick="removeShopLogo()">Remove Logo ❌</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Shop / Business Name</label>
+          <input type="text" id="profName" placeholder="Royal Bags & Luggage">
+        </div>
+        <div class="form-group">
+          <label>Tagline / Subtitle</label>
+          <input type="text" id="profTag" placeholder="Retail & Wholesale Bags">
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Owner / Shop Mobile Number</label>
+          <input type="tel" id="profPhone" placeholder="9876543210">
+        </div>
+        <div class="form-group">
+          <label>Shop Address</label>
+          <input type="text" id="profAddr" placeholder="Main Market Road">
+        </div>
+        <div class="form-group">
+          <label>GST Number (Add or change anytime in future)</label>
+          <input type="text" id="profGst" placeholder="Optional GSTIN">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Custom Bill Footer Terms / Note (Add, Change or Remove ❌)</label>
+        <div style="display:flex; gap:6px;">
+          <input type="text" id="profFooter" placeholder="e.g. Subject to local jurisdiction. Exchange within 3 days with tag.">
+          <button type="button" class="btn-cancel" onclick="document.getElementById('profFooter').value=''">❌</button>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="saveBusinessProfile()">💾 Save All Business Profile Details</button>
+    </div>
+
+    <!-- Master Feature Toggle Switches (ON / OFF) -->
+    <div class="card">
+      <div class="card-header">
+        <span>🎛️ Master Feature Toggle Control Center (ON / OFF)</span>
+      </div>
+      <p style="font-size:0.73rem; color:var(--text-muted); margin-bottom:8px;">
+        Unlock Admin above (PIN: 1234) to turn any feature ON or OFF globally.
+      </p>
+      <div id="masterTogglesList"></div>
+    </div>
+
+    <!-- Lifetime Data Backup, Restore & Manual Account Refresh -->
+    <div class="card">
+      <div class="card-header">
+        <span>🛡️ Lifetime Data Backup, Restore & Manual Account Refresh</span>
+      </div>
+      <div class="grid-3">
+        <button class="btn btn-success" onclick="downloadBackupFile()">📥 Download Backup</button>
+        <label class="btn btn-primary" style="cursor:pointer;">
+          📤 Restore Backup <input type="file" accept=".json" style="display:none;" onchange="restoreBackupFile(event)">
+        </label>
+        <button class="btn btn-warning" onclick="refreshAccountCalculations()">🔄 Refresh Account</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Bottom Navigation Bar -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="tabBtn_viewPos" onclick="openTab('viewPos', this)">
+    <span class="ico">🛒</span><span id="navPos">Billing</span>
+  </button>
+  <button class="nav-btn" id="tabBtn_viewStock" onclick="openTab('viewStock', this)">
+    <span class="ico">🧳</span><span id="navStock">Stock</span>
+  </button>
+  <button class="nav-btn" id="tabBtn_viewStaff" onclick="openTab('viewStaff', this)">
+    <span class="ico">👥</span><span id="navStaff">Staff</span>
+  </button>
+  <button class="nav-btn" id="tabBtn_viewKhata" onclick="openTab('viewKhata', this)">
+    <span class="ico">📒</span><span id="navKhata">Khata</span>
+  </button>
+  <button class="nav-btn" id="tabBtn_viewDashboard" onclick="openTab('viewDashboard', this)">
+    <span class="ico">📊</span><span id="navDash">Dashboard</span>
+  </button>
+  <button class="nav-btn" id="tabBtn_viewAdmin" onclick="openTab('viewAdmin', this)">
+    <span class="ico">⚙️</span><span id="navAdmin">Admin</span>
+  </button>
+</nav>
+
+<script>
+/* ============================================================================
+   1. SMART IMAGE COMPRESSOR (Prevents Camera Photos from Overflowing Storage)
+   ============================================================================ */
+function compressImageFile(file, maxWidth, quality, callback) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = new Image();
+    img.onload = function() {
+      let w = img.width;
+      let h = img.height;
+      if (w > maxWidth) {
+        h = Math.round((h * maxWidth) / w);
+        w = maxWidth;
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL("image/jpeg", quality || 0.75);
+      callback(dataUrl);
+    };
+    img.onerror = function() {
+      callback(e.target.result);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ============================================================================
+   2. DUAL-ENGINE PERSISTENT DATABASE (LocalStorage + IndexedDB Mirror)
+   ============================================================================ */
+const INITIAL_DATA = {
+  isAdmin: false,
+  adminPin: "1234",
+  lang: "en",
+  activeStaffId: 1,
+  activeGstSlab: 18,
+  activeGstMode: "exclusive",
+  selectedStockCat: "3-Piece Set",
+  selectedStockSize: "3-Piece Set (L+M+S)",
+  selectedBreakSetId: 101,
+  selectedBreakPiece: "Cabin (20 inch)",
+  selectedCalcStaffId: 2,
+  selectedPaySupId: 1,
+  profile: {
+    name: "Royal Bags & Luggage",
+    tagline: "Retail & Wholesale POS",
+    phone: "9876543210",
+    address: "Main Market Road",
+    gstin: "",
+    footer: "Thank you for visiting! Exchange within 3 days with intact price tag.",
+    logo: ""
+  },
+  toggles: {
+    bargain: true,
+    floorGuard: true,
+    gst: false,
+    splitPay: true,
+    directSave: true,
+    whatsappSms: true,
+    setBreak: true,
+    warranty: true,
+    staffManage: true,
+    shiftManage: true,
+    supplierKhata: true,
+    dailyExpenses: true,
+    voiceMic: true,
+    lowStockAlert: true
+  },
+  categories: ["All", "3-Piece Set", "2-Piece Set", "Cabin Trolley", "Medium Trolley", "Large Trolley", "Backpack", "Duffle Bag", "School Bag"],
+  products: [
+    { id: 101, name: "VIP Skyway 3-Pc Set", brand: "VIP", category: "3-Piece Set", size: "3-Piece Set (L+M+S)", color: "Navy Blue", floor: 4800, mrp: 8500, qtyFloor: 3, qtyGodown: 5, supplier: "VIP Official Distributor", soldCount: 6, image: "" },
+    { id: 102, name: "Safari Thorium Cabin", brand: "Safari", category: "Cabin Trolley", size: "Cabin (20 inch)", color: "Matte Black", floor: 1600, mrp: 2999, qtyFloor: 2, qtyGodown: 0, supplier: "Mumbai Bag House", soldCount: 11, image: "" },
+    { id: 103, name: "American Tourister Backpack", brand: "American Tourister", category: "Backpack", size: "Standard / Regular", color: "Grey Red", floor: 750, mrp: 1599, qtyFloor: 8, qtyGodown: 12, supplier: "Mumbai Bag House", soldCount: 15, image: "" },
+    { id: 104, name: "Skybags Stroke 2-Pc Set", brand: "Skybags", category: "2-Piece Set", size: "2-Piece Set (M+S)", color: "Wine Red", floor: 3200, mrp: 5800, qtyFloor: 2, qtyGodown: 3, supplier: "VIP Official Distributor", soldCount: 4, image: "" }
+  ],
+  staff: [
+    { id: 1, name: "Owner / Counter 1", phone: "9876543210", commPct: 0, salesTotal: 0, billsCount: 0 },
+    { id: 2, name: "Ramesh Bhai", phone: "9898012345", commPct: 2, salesTotal: 14500, billsCount: 5 }
+  ],
+  shift: {
+    active: true,
+    openCash: 2000,
+    note: "Regular Shift",
+    startedAt: "09:30 AM"
+  },
+  suppliers: [
+    { id: 1, name: "VIP Official Distributor", phone: "9820011223", items: "VIP, Skybags Trolley Sets", totalBill: 85000, paid: 60000 },
+    { id: 2, name: "Mumbai Bag House", phone: "9825099887", items: "Safari, Backpacks, Duffles", totalBill: 42000, paid: 30000 }
+  ],
+  expenses: [
+    { id: 1, title: "Shop Tea & Packing Roll", amount: 120, date: "Today" }
+  ],
+  sales: [],
+  lastReceiptText: ""
+};
+
+function loadDbSafe() {
+  try {
+    const raw = window.localStorage ? localStorage.getItem("LUGGAGE_POS_V4") : null;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && Array.isArray(parsed.products)) return parsed;
+    }
+  } catch (e) {}
+  return JSON.parse(JSON.stringify(INITIAL_DATA));
+}
+
+let db = loadDbSafe();
+let cart = [];
+let selectedCategory = "All";
+let tempUploadedImage = "";
+let floorOverrideApproved = false;
+
+function saveDb() {
+  try {
+    if (window.localStorage) {
+      localStorage.setItem("LUGGAGE_POS_V4", JSON.stringify(db));
+    }
+  } catch (e) {}
+}
+
+/* ============================================================================
+   3. ZERO-POPUP INLINE BANNER SYSTEM
+   ============================================================================ */
+let bannerTimer = null;
+function notify(msg, type) {
+  const bar = document.getElementById("inlineBanner");
+  const txt = document.getElementById("bannerMsg");
+  bar.className = "inline-banner banner-" + (type || "success");
+  txt.innerText = msg;
+  bar.style.display = "flex";
+  if (bannerTimer) clearTimeout(bannerTimer);
+  bannerTimer = setTimeout(function() { bar.style.display = "none"; }, 4500);
+}
+function hideBanner() {
+  document.getElementById("inlineBanner").style.display = "none";
+}
+
+/* ============================================================================
+   4. MULTI-LANGUAGE ENGINE (ENGLISH, HINDI, GUJARATI)
+   ============================================================================ */
+const LANG_PACK = {
+  en: {
+    navPos: "Billing", navStock: "Stock", navStaff: "Staff", navKhata: "Khata", navDash: "Dashboard", navAdmin: "Admin",
+    lblStockHeader: "Available Bags & Sets (Tap to Bill)",
+    lblBillHeader: "Smart Counter Bill",
+    lblActiveStaff: "Salesperson / Counter Staff:",
+    lblWarranty: "Warranty / Serial No. & Terms",
+    lblBargainBox: "Smart Bargaining Calculator",
+    lblTotalMrp: "Total MRP ₹",
+    lblCustomerBargain: "Customer Final Bargain ₹",
+    lblNetPayable: "Net Payable Amount:",
+    lblSplitTitle: "Split Payment (Cash / UPI / Credit)",
+    lblCash: "Cash ₹", lblUpi: "UPI / Online ₹", lblCredit: "Credit (Udhaar) ₹",
+    btnDirectSaveAction: "⚡ Direct Save (No Bill)",
+    btnWaBillAction: "💬 WhatsApp Receipt",
+    btnSmsBillAction: "📩 SMS Receipt",
+    btnPreviewBillAction: "🧾 View / Print Bill",
+    posSearchPlaceholder: "Search bag name, brand, color, size...",
+    custNamePlaceholder: "Customer Name (Optional)",
+    custPhonePlaceholder: "WhatsApp / Mobile No."
+  },
+  hi: {
+    navPos: "बिलिंग", navStock: "स्टॉक", navStaff: "स्टाफ", navKhata: "खाता", navDash: "डैशबोर्ड", navAdmin: "एडमिन",
+    lblStockHeader: "उपलब्ध बैग और सूटकेस सेट (बिल के लिए टैप करें)",
+    lblBillHeader: "स्मार्ट काउंटर बिल",
+    lblActiveStaff: "सेल्स स्टाफ चुनें:",
+    lblWarranty: "वारंटी / सीरियल नंबर विवरण",
+    lblBargainBox: "स्मार्ट मोलभाव (Bargain) कैलकुलेटर",
+    lblTotalMrp: "कुल एमआरपी (MRP) ₹",
+    lblCustomerBargain: "ग्राहक का तय फाइनल भाव ₹",
+    lblNetPayable: "कुल देय राशि (Net Payable):",
+    lblSplitTitle: "पेमेंट मोड / स्प्लिट (कैश + UPI + उधार)",
+    lblCash: "नकद (Cash) ₹", lblUpi: "ऑनलाइन (UPI) ₹", lblCredit: "उधार (Credit) ₹",
+    btnDirectSaveAction: "⚡ डायरेक्ट सेव (बिना बिल)",
+    btnWaBillAction: "💬 WhatsApp बिल",
+    btnSmsBillAction: "📩 SMS बिल",
+    btnPreviewBillAction: "🧾 बिल देखें / प्रिंट",
+    posSearchPlaceholder: "बैग का नाम, ब्रांड, रंग या साइज खोजें...",
+    custNamePlaceholder: "ग्राहक का नाम",
+    custPhonePlaceholder: "ग्राहक का मोबाइल नंबर"
+  },
+  gu: {
+    navPos: "બિલિંગ", navStock: "સ્ટોક", navStaff: "સ્ટાફ", navKhata: "ખાતું", navDash: "ડેશબોર્ડ", navAdmin: "એડમિન",
+    lblStockHeader: "ઉપલબ્ધ બેગ અને સૂટકેસ સેટ (બિલ માટે ટચ કરો)",
+    lblBillHeader: "સ્માર્ટ કાઉન્ટર બિલ",
+    lblActiveStaff: "સેલ્સ સ્ટાફ પસંદ કરો:",
+    lblWarranty: "વોરંટી / સીરીયલ નંબર વિગત",
+    lblBargainBox: "સ્માર્ટ ભાવતાલ (Bargain) કેલ્ક્યુલેટર",
+    lblTotalMrp: "કુલ એમઆરપી (MRP) ₹",
+    lblCustomerBargain: "ગ્રાહકનો નક્કી કરેલ ફાઇનલ ભાવ ₹",
+    lblNetPayable: "કુલ ચૂકવવાની રકમ:",
+    lblSplitTitle: "પેમેન્ટ મોડ / સ્પ્લિટ (રોકડ + UPI + બાકી)",
+    lblCash: "રોકડ (Cash) ₹", lblUpi: "ઓનલાઇન (UPI) ₹", lblCredit: "બાકી (Credit) ₹",
+    btnDirectSaveAction: "⚡ ડાયરેક્ટ સેવ (બિલ વગર)",
+    btnWaBillAction: "💬 WhatsApp બિલ",
+    btnSmsBillAction: "📩 SMS બિલ",
+    btnPreviewBillAction: "🧾 બિલ જુઓ / પ્રિન્ટ",
+    posSearchPlaceholder: "બેગનું નામ, બ્રાન્ડ, કલર કે સાઈઝ શોધો...",
+    custNamePlaceholder: "ગ્રાહકનું નામ",
+    custPhonePlaceholder: "ગ્રાહકનો મોબાઇલ નંબર"
+  }
+};
+
+function setLanguage(langCode) {
+  db.lang = langCode || "en";
+  saveDb();
+
+  ["en", "hi", "gu"].forEach(function(code) {
+    const btn = document.getElementById("langBtn_" + code);
+    if (btn) btn.className = "lang-btn" + (code === db.lang ? " active" : "");
+  });
+
+  const pack = LANG_PACK[db.lang] || LANG_PACK.en;
+  Object.keys(pack).forEach(function(key) {
+    const el = document.getElementById(key);
+    if (el) el.innerText = pack[key];
+  });
+
+  document.getElementById("posSearch").placeholder = pack.posSearchPlaceholder;
+  document.getElementById("custName").placeholder = pack.custNamePlaceholder;
+  document.getElementById("custPhone").placeholder = pack.custPhonePlaceholder;
+  renderCart();
+}
+
+/* ============================================================================
+   5. TAB NAVIGATION
+   ============================================================================ */
+function openTab(viewId, btnEl) {
+  document.querySelectorAll(".view").forEach(function(v) { v.classList.remove("active"); });
+  const target = document.getElementById(viewId);
+  if (target) target.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(function(b) { b.classList.remove("active"); });
+  if (btnEl) {
+    btnEl.classList.add("active");
+  } else {
+    const autoBtn = document.getElementById("tabBtn_" + viewId);
+    if (autoBtn) autoBtn.classList.add("active");
+  }
+  window.scrollTo(0, 0);
+  refreshAllViews();
+}
+
+function openAdminTab() {
+  openTab("viewAdmin", document.getElementById("tabBtn_viewAdmin"));
+}
+
+/* ============================================================================
+   6. POS COUNTER BILLING, INLINE SET-BREAKING, BARGAINING & SPLIT PAY
+   ============================================================================ */
+function renderCategories() {
+  const bar = document.getElementById("posCategoryBar");
+  const manageBar = document.getElementById("categoryManageList");
+  const stockCatPills = document.getElementById("stCategoryPills");
+  bar.innerHTML = "";
+  manageBar.innerHTML = "";
+  stockCatPills.innerHTML = "";
+
+  db.categories.forEach(function(cat) {
+    const pill = document.createElement("button");
+    pill.className = "cat-pill" + (selectedCategory === cat ? " active" : "");
+    pill.innerText = cat;
+    pill.onclick = function() {
+      selectedCategory = cat;
+      renderCategories();
+      renderPosProducts();
+    };
+    bar.appendChild(pill);
+
+    if (cat !== "All") {
+      const sPill = document.createElement("button");
+      sPill.type = "button";
+      sPill.className = "opt-pill" + (db.selectedStockCat === cat ? " active" : "");
+      sPill.innerText = cat;
+      sPill.onclick = function() {
+        db.selectedStockCat = cat;
+        renderCategories();
+      };
+      stockCatPills.appendChild(sPill);
+
+      const mPill = document.createElement("span");
+      mPill.className = "cat-pill";
+      mPill.innerHTML = cat + ' <strong style="color:#dc2626; margin-left:5px; cursor:pointer;" onclick="removeCategory(\'' + cat.replace(/'/g, "") + '\')">❌</strong>';
+      manageBar.appendChild(mPill);
+    }
+  });
+}
+
+function addCategory() {
+  const val = document.getElementById("newCatInput").value.trim();
+  if (!val) return notify("Enter category name first", "warning");
+  if (db.categories.indexOf(val) === -1) {
+    db.categories.push(val);
+    db.selectedStockCat = val;
+    saveDb();
+    renderCategories();
+    document.getElementById("newCatInput").value = "";
+    notify("Category added: " + val);
+  }
+}
+
+function removeCategory(cat) {
+  if (!db.isAdmin) return notify("Unlock Admin mode in Admin tab (PIN 1234) to remove categories", "danger");
+  db.categories = db.categories.filter(function(c) { return c !== cat; });
+  if (selectedCategory === cat) selectedCategory = "All";
+  saveDb();
+  renderCategories();
+  renderPosProducts();
+  notify("Category removed: " + cat);
+}
+
+function clearSearch() {
+  document.getElementById("posSearch").value = "";
+  renderPosProducts();
+}
+
+function toggleInlineSetDrawer(prodId, ev) {
+  if (ev) ev.stopPropagation();
+  const el = document.getElementById("setDrawer_" + prodId);
+  if (el) {
+    el.style.display = el.style.display === "block" ? "none" : "block";
+  }
+}
+
+function sellSinglePieceFromPos(prodId, soldSize, ev) {
+  if (ev) ev.stopPropagation();
+  const parent = db.products.find(function(x) { return x.id === prodId; });
+  if (!parent) return;
+  const totalAvail = (Number(parent.qtyFloor) || 0) + (Number(parent.qtyGodown) || 0);
+  if (totalAvail <= 0) return notify("No set in stock to break!", "danger");
+
+  if (parent.qtyFloor > 0) parent.qtyFloor -= 1;
+  else parent.qtyGodown -= 1;
+
+  let allPieces = ["Cabin (20 inch)", "Medium (24 inch)", "Large (28 inch)"];
+  if (parent.size.indexOf("2-Piece Set (M+S)") !== -1) {
+    allPieces = ["Cabin (20 inch)", "Medium (24 inch)"];
+  } else if (parent.size.indexOf("2-Piece Set (L+M)") !== -1) {
+    allPieces = ["Medium (24 inch)", "Large (28 inch)"];
+  }
+
+  const divisor = allPieces.length;
+  const singleMrp = Math.round(parent.mrp / divisor);
+  const singleFloor = Math.round(parent.floor / divisor);
+  const remaining = allPieces.filter(function(sz) { return sz !== soldSize; });
+
+  // Create remaining loose bags in stock with exact brand, color & remaining sizes
+  remaining.forEach(function(remSize) {
+    db.products.unshift({
+      id: Date.now() + Math.floor(Math.random() * 10000),
+      name: parent.name + " [Remaining Set - " + soldSize + " Sold]",
+      brand: parent.brand,
+      category: parent.category,
+      size: remSize,
+      color: parent.color,
+      floor: singleFloor,
+      mrp: singleMrp,
+      qtyFloor: 1,
+      qtyGodown: 0,
+      supplier: parent.supplier,
+      soldCount: 0,
+      image: parent.image
+    });
+  });
+
+  // Add the sold single piece directly into the active counter bill
+  cart.push({
+    id: Date.now() + 999,
+    isLooseSoldPiece: true,
+    name: parent.name + " (" + soldSize + " Only)",
+    brand: parent.brand,
+    color: parent.color,
+    size: soldSize,
+    floor: singleFloor,
+    mrp: singleMrp
+  });
+
+  saveDb();
+  const newMrpSum = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+  document.getElementById("bargainFinalInput").value = newMrpSum;
+  refreshAllViews();
+  notify("Sold 1 piece (" + soldSize + ") from set! Remaining (" + remaining.join(", ") + ") saved in stock under " + parent.color + ".");
+}
+
+function renderPosProducts() {
+  const q = (document.getElementById("posSearch").value || "").toLowerCase();
+  const grid = document.getElementById("posProductGrid");
+  grid.innerHTML = "";
+  let anyLow = false;
+
+  db.products.forEach(function(p) {
+    const totalQty = (Number(p.qtyFloor) || 0) + (Number(p.qtyGodown) || 0);
+    if (totalQty <= 2) anyLow = true;
+
+    const matchCat = (selectedCategory === "All" || p.category === selectedCategory);
+    const matchQ = !q ||
+      p.name.toLowerCase().indexOf(q) !== -1 ||
+      p.brand.toLowerCase().indexOf(q) !== -1 ||
+      p.color.toLowerCase().indexOf(q) !== -1 ||
+      p.size.toLowerCase().indexOf(q) !== -1;
+
+    if (matchCat && matchQ) {
+      const card = document.createElement("div");
+      card.className = "product-card";
+
+      const isSet = p.size.indexOf("Set") !== -1;
+      const imgHtml = p.image
+        ? '<img class="product-img" src="' + p.image + '" alt="bag" onclick="addItemToCart(' + p.id + ')">'
+        : '<div class="product-img" onclick="addItemToCart(' + p.id + ')">' + (isSet ? '🧳🧳' : '🎒') + '</div>';
+
+      let setSplitBtnHtml = "";
+      if (isSet && db.toggles.setBreak && totalQty > 0) {
+        setSplitBtnHtml =
+          '<button type="button" class="btn btn-outline btn-sm" style="margin-top:5px; width:100%; font-size:0.66rem; padding:4px;" onclick="toggleInlineSetDrawer(' + p.id + ', event)">✂️ Sell 1 Bag from Set</button>' +
+          '<div class="set-split-drawer" id="setDrawer_' + p.id + '">' +
+            '<div style="font-size:0.64rem; font-weight:700; color:var(--text-muted); margin-bottom:3px;">Tap piece to sell separately:</div>' +
+            '<div style="display:flex; flex-direction:column; gap:3px;">' +
+              '<button type="button" class="opt-pill" style="font-size:0.65rem; padding:4px;" onclick="sellSinglePieceFromPos(' + p.id + ', \'Cabin (20 inch)\', event)">Sell Cabin (20")</button>' +
+              '<button type="button" class="opt-pill" style="font-size:0.65rem; padding:4px;" onclick="sellSinglePieceFromPos(' + p.id + ', \'Medium (24 inch)\', event)">Sell Medium (24")</button>' +
+              (p.size.indexOf("3-Piece") !== -1 ? '<button type="button" class="opt-pill" style="font-size:0.65rem; padding:4px;" onclick="sellSinglePieceFromPos(' + p.id + ', \'Large (28 inch)\', event)">Sell Large (28")</button>' : '') +
+            '</div>' +
+          '</div>';
+      }
+
+      card.innerHTML =
+        imgHtml +
+        '<div class="product-title" onclick="addItemToCart(' + p.id + ')">' + p.name + '</div>' +
+        '<div class="product-meta" onclick="addItemToCart(' + p.id + ')">' + p.brand + ' • <strong>' + p.color + '</strong><br>' + p.size + '<br>Shop: ' + p.qtyFloor + ' | Godown: ' + p.qtyGodown + '</div>' +
+        '<div class="product-foot" onclick="addItemToCart(' + p.id + ')">' +
+          '<span>₹' + p.mrp + '</span>' +
+          '<span class="badge ' + (totalQty <= 2 ? 'badge-low' : (isSet ? 'badge-set' : 'badge-ok')) + '">' +
+            (totalQty <= 2 ? 'Low: ' + totalQty : 'Qty: ' + totalQty) +
+          '</span>' +
+        '</div>' +
+        setSplitBtnHtml;
+
+      grid.appendChild(card);
+    }
+  });
+
+  const badge = document.getElementById("lowStockHeaderBadge");
+  badge.style.display = (anyLow && db.toggles.lowStockAlert) ? "inline-block" : "none";
+}
+
+function addItemToCart(prodId) {
+  const p = db.products.find(function(x) { return x.id === prodId; });
+  if (!p) return;
+  const totalAvail = (Number(p.qtyFloor) || 0) + (Number(p.qtyGodown) || 0);
+  const inCartCount = cart.filter(function(c) { return c.id === prodId; }).length;
+  if (inCartCount >= totalAvail) {
+    return notify("Out of stock for " + p.name + "!", "danger");
+  }
+  cart.push(Object.assign({}, p, { cartItemId: Date.now() + Math.random() }));
+  floorOverrideApproved = false;
+  const newMrpSum = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+  document.getElementById("bargainFinalInput").value = newMrpSum;
+  renderCart();
+  notify("Added to bill: " + p.name);
+}
+
+function addCustomCartItem() {
+  const name = document.getElementById("customItemName").value.trim();
+  const price = parseFloat(document.getElementById("customItemPrice").value) || 0;
+  if (!name || !price) return notify("Enter custom item name and price ₹!", "warning");
+
+  cart.push({
+    id: Date.now(),
+    isCustomItem: true,
+    name: name,
+    brand: "Custom",
+    color: "Standard",
+    size: "Custom",
+    floor: 0,
+    mrp: price
+  });
+  document.getElementById("customItemName").value = "";
+  document.getElementById("customItemPrice").value = "";
+  const newMrpSum = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+  document.getElementById("bargainFinalInput").value = newMrpSum;
+  renderCart();
+  notify("Custom item added to bill!");
+}
+
+function removeCartItem(index) {
+  cart.splice(index, 1);
+  const newMrpSum = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+  document.getElementById("bargainFinalInput").value = newMrpSum || "";
+  renderCart();
+}
+
+function clearCart() {
+  cart = [];
+  floorOverrideApproved = false;
+  document.getElementById("bargainFinalInput").value = "";
+  document.getElementById("billWarrantyInput").value = "";
+  resetSplitPay();
+  renderCart();
+}
+
+function resetBargainToMrp() {
+  const sumMrp = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+  document.getElementById("bargainFinalInput").value = sumMrp || "";
+  floorOverrideApproved = false;
+  document.getElementById("inlineFloorOverride").style.display = "none";
+  recalcBillTotals();
+}
+
+function setGstSlab(slabVal) {
+  db.activeGstSlab = slabVal;
+  saveDb();
+  const pills = document.querySelectorAll("#gstSlabPills .opt-pill");
+  pills.forEach(function(btn) {
+    btn.className = "opt-pill" + (btn.innerText === slabVal + "%" ? " active" : "");
+  });
+  recalcBillTotals();
+}
+
+function setGstMode(modeVal) {
+  db.activeGstMode = modeVal;
+  saveDb();
+  document.getElementById("gstModeExcl").className = "opt-pill" + (modeVal === "exclusive" ? " active" : "");
+  document.getElementById("gstModeIncl").className = "opt-pill" + (modeVal === "inclusive" ? " active" : "");
+  recalcBillTotals();
+}
+
+function renderCart() {
+  const box = document.getElementById("cartContainer");
+  if (cart.length === 0) {
+    const emptyMsg = db.lang === "hi"
+      ? "बिल में जोड़ने के लिए किसी भी बैग पर टैप करें।"
+      : (db.lang === "gu" ? "બિલમાં ઉમેરવા માટે કોઈપણ બેગ પર ટચ કરો." : "Tap any bag or luggage set to add to counter bill.");
+    box.innerHTML = '<div style="text-align:center; padding:12px; color:var(--text-muted); font-size:0.78rem; background:#f8fafc; border-radius:8px;">' + emptyMsg + '</div>';
+    document.getElementById("cartTotalMrp").innerText = "₹0";
+    document.getElementById("grandTotalPayable").innerText = "₹0";
+    document.getElementById("bargainDiscountSummary").innerText = "";
+    document.getElementById("gstBreakdownText").innerText = "";
+    document.getElementById("inlineFloorOverride").style.display = "none";
+    document.getElementById("payCashInput").value = 0;
+    document.getElementById("payUpiInput").value = 0;
+    document.getElementById("payCreditInput").value = 0;
+    return;
+  }
+
+  box.innerHTML = "";
+  cart.forEach(function(item, idx) {
+    const row = document.createElement("div");
+    row.className = "cart-row";
+    row.innerHTML =
+      '<div>' +
+        '<strong>' + item.name + '</strong>' +
+        '<div style="font-size:0.68rem; color:var(--text-muted);">' + item.brand + ' | ' + item.color + ' | ' + item.size + '</div>' +
+      '</div>' +
+      '<div style="display:flex; align-items:center; gap:8px;">' +
+        '<span style="font-weight:800;">₹' + item.mrp + '</span>' +
+        '<button class="btn-cancel" onclick="removeCartItem(' + idx + ')">❌</button>' +
+      '</div>';
+    box.appendChild(row);
+  });
+
+  recalcBillTotals();
+}
+
+function recalcBillTotals() {
+  const sumMrp = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+  const sumFloor = cart.reduce(function(s, i) { return s + (Number(i.floor) || 0); }, 0);
+  document.getElementById("cartTotalMrp").innerText = "₹" + sumMrp;
+
+  let agreedBase = parseFloat(document.getElementById("bargainFinalInput").value);
+  if (isNaN(agreedBase) || !db.toggles.bargain) agreedBase = sumMrp;
+
+  const overrideBox = document.getElementById("inlineFloorOverride");
+  if (db.toggles.floorGuard && agreedBase < sumFloor && !db.isAdmin && !floorOverrideApproved && cart.length > 0) {
+    overrideBox.style.display = "block";
+  } else {
+    overrideBox.style.display = "none";
+  }
+
+  if (sumMrp > 0) {
+    const saved = sumMrp - agreedBase;
+    const pct = Math.round((saved / sumMrp) * 100);
+    document.getElementById("bargainDiscountSummary").innerText =
+      saved >= 0 ? "Bargain Discount Given: ₹" + saved + " (" + pct + "% OFF)" : "Extra Added: ₹" + Math.abs(saved);
+  }
+
+  let grandTotal = agreedBase;
+  if (db.toggles.gst) {
+    const slab = Number(db.activeGstSlab) || 0;
+    const mode = db.activeGstMode || "exclusive";
+    if (slab > 0) {
+      if (mode === "exclusive") {
+        const tax = Math.round((agreedBase * slab) / 100);
+        grandTotal = agreedBase + tax;
+        document.getElementById("gstBreakdownText").innerText =
+          "Taxable: ₹" + agreedBase + " + GST (" + slab + "%): ₹" + tax + " (CGST ₹" + (tax/2) + " + SGST ₹" + (tax/2) + ")";
+      } else {
+        const tax = Math.round(agreedBase - (agreedBase * 100 / (100 + slab)));
+        grandTotal = agreedBase;
+        document.getElementById("gstBreakdownText").innerText =
+          "Inclusive GST (" + slab + "%): ₹" + tax + " (CGST ₹" + (tax/2).toFixed(1) + " + SGST ₹" + (tax/2).toFixed(1) + ")";
+      }
+    } else {
+      document.getElementById("gstBreakdownText").innerText = "0% GST (Nil Rated)";
+    }
+  }
+
+  document.getElementById("grandTotalPayable").innerText = "₹" + grandTotal;
+  document.getElementById("payCashInput").value = grandTotal;
+  document.getElementById("payUpiInput").value = 0;
+  document.getElementById("payCreditInput").value = 0;
+}
+
+function approveFloorOverride() {
+  const pin = document.getElementById("overridePinInput").value.trim();
+  if (pin === db.adminPin) {
+    floorOverrideApproved = true;
+    document.getElementById("inlineFloorOverride").style.display = "none";
+    document.getElementById("overridePinInput").value = "";
+    notify("Floor price override approved by Admin!");
+  } else {
+    notify("Wrong Admin PIN! Default is 1234", "danger");
+  }
+}
+
+function setQuickSplit(mode) {
+  const totalText = document.getElementById("grandTotalPayable").innerText.replace("₹", "");
+  const total = parseFloat(totalText) || 0;
+  if (mode === "cash") {
+    document.getElementById("payCashInput").value = total;
+    document.getElementById("payUpiInput").value = 0;
+    document.getElementById("payCreditInput").value = 0;
+  } else if (mode === "upi") {
+    document.getElementById("payCashInput").value = 0;
+    document.getElementById("payUpiInput").value = total;
+    document.getElementById("payCreditInput").value = 0;
+  } else if (mode === "half") {
+    const half = Math.round(total / 2);
+    document.getElementById("payCashInput").value = half;
+    document.getElementById("payUpiInput").value = total - half;
+    document.getElementById("payCreditInput").value = 0;
+  } else if (mode === "credit") {
+    document.getElementById("payCashInput").value = 0;
+    document.getElementById("payUpiInput").value = 0;
+    document.getElementById("payCreditInput").value = total;
+  }
+}
+
+function autoBalanceSplit(changedField) {
+  const totalText = document.getElementById("grandTotalPayable").innerText.replace("₹", "");
+  const total = parseFloat(totalText) || 0;
+  let cash = parseFloat(document.getElementById("payCashInput").value) || 0;
+  let upi = parseFloat(document.getElementById("payUpiInput").value) || 0;
+  let credit = parseFloat(document.getElementById("payCreditInput").value) || 0;
+
+  if (changedField === "cash") {
+    upi = Math.max(0, total - cash - credit);
+    document.getElementById("payUpiInput").value = upi;
+  } else if (changedField === "upi") {
+    credit = Math.max(0, total - cash - upi);
+    document.getElementById("payCreditInput").value = credit;
+  }
+}
+
+function resetSplitPay() {
+  const totalText = document.getElementById("grandTotalPayable").innerText.replace("₹", "");
+  const total = parseFloat(totalText) || 0;
+  document.getElementById("payCashInput").value = total;
+  document.getElementById("payUpiInput").value = 0;
+  document.getElementById("payCreditInput").value = 0;
+}
+
+function processCheckout(mode) {
+  if (cart.length === 0) return notify("Tap at least 1 bag from Available Stock to bill!", "warning");
+
+  const sumFloor = cart.reduce(function(s, i) { return s + (Number(i.floor) || 0); }, 0);
+  const totalPayable = parseFloat(document.getElementById("grandTotalPayable").innerText.replace("₹", "")) || 0;
+
+  if (db.toggles.floorGuard && totalPayable < sumFloor && !db.isAdmin && !floorOverrideApproved) {
+    document.getElementById("inlineFloorOverride").style.display = "block";
+    return notify("Bargain amount is below floor cost! Enter Admin PIN (1234).", "danger");
+  }
+
+  cart.forEach(function(item) {
+    if (!item.isLooseSoldPiece && !item.isCustomItem) {
+      const prod = db.products.find(function(p) { return p.id === item.id; });
+      if (prod) {
+        if (prod.qtyFloor > 0) prod.qtyFloor -= 1;
+        else if (prod.qtyGodown > 0) prod.qtyGodown -= 1;
+        prod.soldCount = (prod.soldCount || 0) + 1;
+      }
+    }
+  });
+
+  const staffObj = db.staff.find(function(s) { return s.id === db.activeStaffId; }) || db.staff[0];
+  if (staffObj) {
+    staffObj.salesTotal = (staffObj.salesTotal || 0) + totalPayable;
+    staffObj.billsCount = (staffObj.billsCount || 0) + 1;
+  }
+
+  const cash = parseFloat(document.getElementById("payCashInput").value) || 0;
+  const upi = parseFloat(document.getElementById("payUpiInput").value) || 0;
+  const credit = parseFloat(document.getElementById("payCreditInput").value) || 0;
+  const custName = document.getElementById("custName").value.trim() || "Walk-in Customer";
+  const custPhone = document.getElementById("custPhone").value.trim();
+  const warranty = document.getElementById("billWarrantyInput").value.trim();
+  const sumMrp = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+
+  const billNo = "INV-" + String(db.sales.length + 1001);
+  const dateStr = new Date().toLocaleString();
+  const itemLines = cart.map(function(c, i) {
+    return (i + 1) + ". " + c.name + " (" + c.color + ", " + c.size + ") - MRP ₹" + c.mrp;
+  }).join("\n");
+
+  const receiptLines = [
+    db.profile.name,
+    db.profile.address + " | Ph: " + db.profile.phone,
+    db.profile.gstin ? ("GSTIN: " + db.profile.gstin) : "Estimate / Cash Memo",
+    "--------------------------------",
+    "Bill No: " + billNo,
+    "Date: " + dateStr,
+    "Customer: " + custName + (custPhone ? " (" + custPhone + ")" : ""),
+    "--------------------------------",
+    itemLines,
+    "--------------------------------",
+    "Total MRP: ₹" + sumMrp,
+    "Bargain Savings: ₹" + Math.max(0, sumMrp - totalPayable),
+    "Final Agreed Amount: ₹" + totalPayable,
+    "Paid: Cash ₹" + cash + " | UPI ₹" + upi + (credit > 0 ? " | Due ₹" + credit : ""),
+    warranty ? ("Warranty/SN: " + warranty) : "",
+    db.profile.footer ? ("Note: " + db.profile.footer) : "",
+    "--------------------------------",
+    "Thank you for shopping at " + db.profile.name + "!"
+  ].filter(Boolean).join("\n");
+
+  db.lastReceiptText = receiptLines;
+
+  db.sales.unshift({
+    id: Date.now(),
+    billNo: billNo,
+    date: dateStr,
+    customer: custName,
+    phone: custPhone,
+    itemsSummary: cart.map(function(c) { return c.name; }).join(", "),
+    mrpTotal: sumMrp,
+    finalTotal: totalPayable,
+    cash: cash,
+    upi: upi,
+    credit: credit,
+    staffName: staffObj ? staffObj.name : "Counter",
+    mode: mode
+  });
+
+  saveDb();
+
+  if (mode === "whatsapp") {
+    const cleanPhone = custPhone.replace(/\D/g, "");
+    const phoneParam = cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone;
+    const url = "https://wa.me/" + phoneParam + "?text=" + encodeURIComponent(receiptLines);
+    window.open(url, "_blank");
+  } else if (mode === "sms") {
+    window.location.href = "sms:" + custPhone + "?body=" + encodeURIComponent(receiptLines);
+  }
+
+  clearCart();
+  document.getElementById("custName").value = "";
+  document.getElementById("custPhone").value = "";
+  refreshAllViews();
+  notify(mode === "direct" ? "Direct Entry Saved! ₹" + totalPayable : "Bill " + billNo + " Saved!");
+}
+
+function previewLastBill() {
+  if (!db.lastReceiptText) return notify("Save at least 1 bill first to view receipt.", "warning");
+  const box = document.getElementById("inlineReceiptPreview");
+  const logoArea = document.getElementById("receiptLogoPreview");
+  if (db.profile.logo) {
+    logoArea.innerHTML = '<img src="' + db.profile.logo + '" style="width:54px;height:54px;border-radius:8px;object-fit:cover;">';
+  } else {
+    logoArea.innerHTML = "";
+  }
+  document.getElementById("receiptContentArea").innerText = db.lastReceiptText;
+  box.style.display = "block";
+}
+
+/* ============================================================================
+   7. STOCK MANAGEMENT & SET BREAKING
+   ============================================================================ */
+function selectSizePill(sizeVal, btnEl) {
+  db.selectedStockSize = sizeVal;
+  document.querySelectorAll("#stSizePills .opt-pill").forEach(function(b) { b.classList.remove("active"); });
+  if (btnEl) btnEl.classList.add("active");
+}
+
+function selectBreakPiece(pieceVal, btnEl) {
+  db.selectedBreakPiece = pieceVal;
+  document.querySelectorAll("#brkPiecePills .opt-pill").forEach(function(b) { b.classList.remove("active"); });
+  if (btnEl) btnEl.classList.add("active");
+}
+
+function handlePhotoSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  compressImageFile(file, 360, 0.78, function(compressedDataUrl) {
+    tempUploadedImage = compressedDataUrl;
+    const thumb = document.getElementById("stPhotoThumb");
+    thumb.src = compressedDataUrl;
+    thumb.style.display = "inline-block";
+    document.getElementById("photoPreviewStatus").innerText = "✅ Photo compressed & ready!";
+  });
+}
+
+function clearTempStockPhoto() {
+  tempUploadedImage = "";
+  const thumb = document.getElementById("stPhotoThumb");
+  thumb.src = "";
+  thumb.style.display = "none";
+  document.getElementById("photoPreviewStatus").innerText = "";
+}
+
+function saveStockItem() {
+  const editId = document.getElementById("editProdId").value;
+  const name = document.getElementById("stName").value.trim();
+  const brand = document.getElementById("stBrand").value.trim() || "Standard";
+  const category = db.selectedStockCat || "3-Piece Set";
+  const size = db.selectedStockSize || "3-Piece Set (L+M+S)";
+  const color = document.getElementById("stColor").value.trim() || "Black";
+  const floor = parseFloat(document.getElementById("stFloor").value) || 0;
+  const mrp = parseFloat(document.getElementById("stMrp").value) || 0;
+  const qtyFloor = parseInt(document.getElementById("stQtyFloor").value) || 0;
+  const qtyGodown = parseInt(document.getElementById("stQtyGodown").value) || 0;
+  const supplier = document.getElementById("stSupplier").value.trim() || "Direct";
+
+  if (!name || !mrp) return notify("Please enter Product Name and MRP!", "warning");
+
+  if (editId) {
+    const existing = db.products.find(function(p) { return p.id === parseInt(editId); });
+    if (existing) {
+      existing.name = name;
+      existing.brand = brand;
+      existing.category = category;
+      existing.size = size;
+      existing.color = color;
+      existing.floor = floor;
+      existing.mrp = mrp;
+      existing.qtyFloor = qtyFloor;
+      existing.qtyGodown = qtyGodown;
+      existing.supplier = supplier;
+      if (tempUploadedImage) existing.image = tempUploadedImage;
+    }
+    notify("Stock item updated!");
+  } else {
+    db.products.unshift({
+      id: Date.now(),
+      name: name,
+      brand: brand,
+      category: category,
+      size: size,
+      color: color,
+      floor: floor,
+      mrp: mrp,
+      qtyFloor: qtyFloor,
+      qtyGodown: qtyGodown,
+      supplier: supplier,
+      soldCount: 0,
+      image: tempUploadedImage
+    });
+    notify("New luggage item added to inventory!");
+  }
+
+  saveDb();
+  resetStockForm();
+  refreshAllViews();
+}
+
+function editStockItem(id) {
+  const p = db.products.find(function(x) { return x.id === id; });
+  if (!p) return;
+  document.getElementById("editProdId").value = p.id;
+  document.getElementById("stName").value = p.name;
+  document.getElementById("stBrand").value = p.brand;
+  db.selectedStockCat = p.category;
+  db.selectedStockSize = p.size;
+  document.getElementById("stColor").value = p.color;
+  document.getElementById("stFloor").value = p.floor;
+  document.getElementById("stMrp").value = p.mrp;
+  document.getElementById("stQtyFloor").value = p.qtyFloor;
+  document.getElementById("stQtyGodown").value = p.qtyGodown;
+  document.getElementById("stSupplier").value = p.supplier || "";
+  if (p.image) {
+    tempUploadedImage = p.image;
+    const thumb = document.getElementById("stPhotoThumb");
+    thumb.src = p.image;
+    thumb.style.display = "inline-block";
+  }
+  document.getElementById("stockFormTitle").innerText = "Editing: " + p.name;
+  renderCategories();
+  window.scrollTo(0, 0);
+}
+
+function deleteStockItem(id) {
+  if (!db.isAdmin) return notify("Unlock Admin mode in Admin tab (PIN 1234) to delete stock!", "danger");
+  db.products = db.products.filter(function(p) { return p.id !== id; });
+  saveDb();
+  refreshAllViews();
+  notify("Stock item removed.");
+}
+
+function resetStockForm() {
+  document.getElementById("editProdId").value = "";
+  document.getElementById("stName").value = "";
+  document.getElementById("stBrand").value = "";
+  document.getElementById("stColor").value = "";
+  document.getElementById("stFloor").value = "";
+  document.getElementById("stMrp").value = "";
+  document.getElementById("stQtyFloor").value = "";
+  document.getElementById("stQtyGodown").value = "";
+  document.getElementById("stSupplier").value = "";
+  clearTempStockPhoto();
+  document.getElementById("stockFormTitle").innerText = "Add / Update Bag & Luggage Stock";
+}
+
+function renderStockTableAndSets() {
+  const tbl = document.getElementById("inventoryTable");
+  const setPills = document.getElementById("brkSetPills");
+  const supQuickPills = document.getElementById("stSupplierQuickPills");
+  setPills.innerHTML = "";
+  supQuickPills.innerHTML = "";
+
+  db.suppliers.forEach(function(sup) {
+    const sp = document.createElement("button");
+    sp.type = "button";
+    sp.className = "opt-pill";
+    sp.innerText = sup.name;
+    sp.onclick = function() { document.getElementById("stSupplier").value = sup.name; };
+    supQuickPills.appendChild(sp);
+  });
+
+  let html = "<tr><th>Item / Brand</th><th>Size & Color</th><th>Shop / Godown</th><th>Floor / MRP</th><th>Action</th></tr>";
+  db.products.forEach(function(p) {
+    const totalQ = (Number(p.qtyFloor) || 0) + (Number(p.qtyGodown) || 0);
+    if (p.size.indexOf("Set") !== -1 && totalQ > 0) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "opt-pill" + (db.selectedBreakSetId === p.id ? " active" : "");
+      btn.innerText = p.name + " (" + p.color + ") [Qty: " + totalQ + "]";
+      btn.onclick = function() {
+        db.selectedBreakSetId = p.id;
+        renderStockTableAndSets();
+      };
+      setPills.appendChild(btn);
+    }
+
+    html +=
+      "<tr>" +
+        "<td><strong>" + p.name + "</strong><br><span style='color:var(--text-muted);'>" + p.brand + " (" + (p.supplier || "Direct") + ")</span></td>" +
+        "<td>" + p.size + "<br><strong>" + p.color + "</strong></td>" +
+        "<td>Shop: <strong>" + p.qtyFloor + "</strong><br>Godown: <strong>" + p.qtyGodown + "</strong></td>" +
+        "<td>Min: ₹" + p.floor + "<br><strong>MRP: ₹" + p.mrp + "</strong></td>" +
+        "<td style='white-space:nowrap;'>" +
+          "<button class='btn btn-outline btn-sm' onclick='editStockItem(" + p.id + ")'>Edit</button> " +
+          "<button class='btn-cancel' onclick='deleteStockItem(" + p.id + ")'>❌</button>" +
+        "</td>" +
+      "</tr>";
+  });
+  tbl.innerHTML = html;
+}
+
+function breakSelectedSet() {
+  const parent = db.products.find(function(p) { return p.id === db.selectedBreakSetId; });
+  if (!parent) return notify("Tap a set above to break first!", "warning");
+
+  if (parent.qtyFloor > 0) parent.qtyFloor -= 1;
+  else if (parent.qtyGodown > 0) parent.qtyGodown -= 1;
+  else return notify("Selected set has 0 stock left!", "danger");
+
+  const soldPiece = db.selectedBreakPiece || "Cabin (20 inch)";
+  let allPieces = ["Cabin (20 inch)", "Medium (24 inch)", "Large (28 inch)"];
+  if (parent.size.indexOf("2-Piece Set (M+S)") !== -1) {
+    allPieces = ["Cabin (20 inch)", "Medium (24 inch)"];
+  } else if (parent.size.indexOf("2-Piece Set (L+M)") !== -1) {
+    allPieces = ["Medium (24 inch)", "Large (28 inch)"];
+  }
+
+  const remainingPieces = allPieces.filter(function(sz) { return sz !== soldPiece; });
+  const divisor = allPieces.length;
+
+  remainingPieces.forEach(function(remSize) {
+    db.products.unshift({
+      id: Date.now() + Math.floor(Math.random() * 10000),
+      name: parent.name + " [Loose - " + soldPiece + " Sold]",
+      brand: parent.brand,
+      category: parent.category,
+      size: remSize,
+      color: parent.color,
+      floor: Math.round(parent.floor / divisor),
+      mrp: Math.round(parent.mrp / divisor),
+      qtyFloor: 1,
+      qtyGodown: 0,
+      supplier: parent.supplier,
+      soldCount: 0,
+      image: parent.image
+    });
+  });
+
+  saveDb();
+  refreshAllViews();
+  notify("Set broken! " + soldPiece + " marked sold; remaining (" + remainingPieces.join(", ") + ") added to loose stock.");
+}
+
+/* ============================================================================
+   8. STAFF, SHIFT & MANUAL INCENTIVE CALCULATOR
+   ============================================================================ */
+function startNewShift() {
+  const cash = parseFloat(document.getElementById("shiftOpenCash").value) || 0;
+  const note = document.getElementById("shiftNote").value.trim() || "Regular Shift";
+  db.shift = { active: true, openCash: cash, note: note, startedAt: new Date().toLocaleTimeString() };
+  saveDb();
+  renderStaffAndShift();
+  notify("Shift started with opening cash ₹" + cash);
+}
+
+function closeCurrentShift() {
+  db.shift.active = false;
+  saveDb();
+  renderStaffAndShift();
+  notify("Shift closed!");
+}
+
+function saveStaffMember() {
+  const editId = document.getElementById("editStaffId").value;
+  const name = document.getElementById("stfNameInput").value.trim();
+  const phone = document.getElementById("stfPhoneInput").value.trim();
+  const commPct = parseFloat(document.getElementById("stfIncRate").value) || 0;
+  if (!name) return notify("Enter staff member name!", "warning");
+
+  if (editId) {
+    const existing = db.staff.find(function(s) { return s.id === parseInt(editId); });
+    if (existing) {
+      existing.name = name;
+      existing.phone = phone;
+      existing.commPct = commPct;
+    }
+    notify("Staff updated: " + name);
+  } else {
+    db.staff.push({ id: Date.now(), name: name, phone: phone, commPct: commPct, salesTotal: 0, billsCount: 0 });
+    notify("Staff added: " + name);
+  }
+  saveDb();
+  resetStaffForm();
+  renderStaffAndShift();
+}
+
+function editStaffMember(id) {
+  const s = db.staff.find(function(x) { return x.id === id; });
+  if (!s) return;
+  document.getElementById("editStaffId").value = s.id;
+  document.getElementById("stfNameInput").value = s.name;
+  document.getElementById("stfPhoneInput").value = s.phone || "";
+  document.getElementById("stfIncRate").value = s.commPct || 0;
+  document.getElementById("staffFormTitle").innerText = "Editing Staff: " + s.name;
+}
+
+function resetStaffForm() {
+  document.getElementById("editStaffId").value = "";
+  document.getElementById("stfNameInput").value = "";
+  document.getElementById("stfPhoneInput").value = "";
+  document.getElementById("stfIncRate").value = "";
+  document.getElementById("staffFormTitle").innerText = "👥 Unlimited Staff Management (Add / Edit / Remove ❌)";
+}
+
+function removeStaffMember(id) {
+  if (!db.isAdmin) return notify("Unlock Admin mode (PIN 1234) to remove staff!", "danger");
+  if (db.staff.length <= 1) return notify("At least 1 staff profile is required.", "warning");
+  db.staff = db.staff.filter(function(s) { return s.id !== id; });
+  saveDb();
+  renderStaffAndShift();
+  notify("Staff removed.");
+}
+
+function renderStaffAndShift() {
+  const posPills = document.getElementById("posStaffPills");
+  const calcPills = document.getElementById("calcStaffPills");
+  const tbl = document.getElementById("staffReportTable");
+
+  posPills.innerHTML = "";
+  calcPills.innerHTML = "";
+
+  let html = "<tr><th>Staff Name</th><th>Bills</th><th>Total Sales ₹</th><th>Incentive</th><th>Action</th></tr>";
+  db.staff.forEach(function(s) {
+    const pBtn = document.createElement("button");
+    pBtn.type = "button";
+    pBtn.className = "opt-pill" + (db.activeStaffId === s.id ? " active" : "");
+    pBtn.innerText = s.name;
+    pBtn.onclick = function() {
+      db.activeStaffId = s.id;
+      renderStaffAndShift();
+    };
+    posPills.appendChild(pBtn);
+
+    const cBtn = document.createElement("button");
+    cBtn.type = "button";
+    cBtn.className = "opt-pill" + (db.selectedCalcStaffId === s.id ? " active" : "");
+    cBtn.innerText = s.name + " (₹" + s.salesTotal + ")";
+    cBtn.onclick = function() {
+      db.selectedCalcStaffId = s.id;
+      renderStaffAndShift();
+    };
+    calcPills.appendChild(cBtn);
+
+    const estInc = Math.round((s.salesTotal * (s.commPct || 0)) / 100);
+    html +=
+      "<tr>" +
+        "<td><strong>" + s.name + "</strong><br><span style='color:var(--text-muted);'>" + (s.phone || "") + "</span></td>" +
+        "<td>" + s.billsCount + "</td>" +
+        "<td><strong>₹" + s.salesTotal + "</strong></td>" +
+        "<td style='color:var(--success);font-weight:800;'>₹" + estInc + " (" + s.commPct + "%)</td>" +
+        "<td style='white-space:nowrap;'>" +
+          "<button class='btn btn-outline btn-sm' onclick='editStaffMember(" + s.id + ")'>Edit</button> " +
+          "<button class='btn-cancel' onclick='removeStaffMember(" + s.id + ")'>❌</button>" +
+        "</td>" +
+      "</tr>";
+  });
+  tbl.innerHTML = html;
+
+  const badge = document.getElementById("shiftBadge");
+  badge.className = "badge " + (db.shift.active ? "badge-ok" : "badge-low");
+  badge.innerText = db.shift.active ? "Shift Active" : "Shift Closed";
+  document.getElementById("shiftSummaryLine").innerText =
+    "Shift: " + db.shift.note + " | Opening Cash: ₹" + db.shift.openCash + " | Started: " + db.shift.startedAt;
+
+  calculateStaffIncentive();
+}
+
+function calculateStaffIncentive() {
+  const stf = db.staff.find(function(x) { return x.id === db.selectedCalcStaffId; }) || db.staff[0];
+  if (!stf) return;
+  const pct = parseFloat(document.getElementById("calcCommPct").value) || 0;
+  const bonus = parseFloat(document.getElementById("calcFixedBonus").value) || 0;
+  const totalInc = Math.round((stf.salesTotal * pct) / 100) + bonus;
+  document.getElementById("staffIncentiveResult").innerText =
+    "Total Incentive for " + stf.name + ": ₹" + totalInc + " (Sales ₹" + stf.salesTotal + " @ " + pct + "% + Bonus ₹" + bonus + ")";
+}
+
+/* ============================================================================
+   9. SUPPLIER KHATA & DAILY EXPENSES
+   ============================================================================ */
+function saveSupplierKhata() {
+  const editId = document.getElementById("editSupplierId").value;
+  const name = document.getElementById("supName").value.trim();
+  const phone = document.getElementById("supPhone").value.trim();
+  const items = document.getElementById("supItems").value.trim();
+  const totalBill = parseFloat(document.getElementById("supBillAmt").value) || 0;
+  const paid = parseFloat(document.getElementById("supPaidAmt").value) || 0;
+  if (!name) return notify("Enter Supplier Name!", "warning");
+
+  if (editId) {
+    const existing = db.suppliers.find(function(s) { return s.id === parseInt(editId); });
+    if (existing) {
+      existing.name = name;
+      existing.phone = phone;
+      existing.items = items;
+      existing.totalBill = totalBill;
+      existing.paid = paid;
+    }
+    notify("Supplier Khata updated!");
+  } else {
+    db.suppliers.unshift({ id: Date.now(), name: name, phone: phone, items: items, totalBill: totalBill, paid: paid });
+    notify("Supplier Khata saved!");
+  }
+  saveDb();
+  resetSupplierForm();
+  refreshAllViews();
+}
+
+function editSupplier(id) {
+  const s = db.suppliers.find(function(x) { return x.id === id; });
+  if (!s) return;
+  document.getElementById("editSupplierId").value = s.id;
+  document.getElementById("supName").value = s.name;
+  document.getElementById("supPhone").value = s.phone || "";
+  document.getElementById("supItems").value = s.items || "";
+  document.getElementById("supBillAmt").value = s.totalBill || 0;
+  document.getElementById("supPaidAmt").value = s.paid || 0;
+  document.getElementById("supFormTitle").innerText = "Editing Supplier: " + s.name;
+  window.scrollTo(0, 0);
+}
+
+function resetSupplierForm() {
+  document.getElementById("editSupplierId").value = "";
+  document.getElementById("supName").value = "";
+  document.getElementById("supPhone").value = "";
+  document.getElementById("supItems").value = "";
+  document.getElementById("supBillAmt").value = "";
+  document.getElementById("supPaidAmt").value = "";
+  document.getElementById("supFormTitle").innerText = "📒 Supplier Khata (Bills, Partial Payments & Stock Supplied)";
+}
+
+function recordCustomSupplierPay() {
+  const amt = parseFloat(document.getElementById("customSupPayAmt").value) || 0;
+  if (!amt) return notify("Enter payment amount ₹ first!", "warning");
+  const sup = db.suppliers.find(function(x) { return x.id === db.selectedPaySupId; }) || db.suppliers[0];
+  if (!sup) return;
+  sup.paid = (sup.paid || 0) + amt;
+  saveDb();
+  document.getElementById("customSupPayAmt").value = "";
+  refreshAllViews();
+  notify("Recorded ₹" + amt + " payment to " + sup.name);
+}
+
+function paySupplierDue(id, amt) {
+  const s = db.suppliers.find(function(x) { return x.id === id; });
+  if (!s) return;
+  s.paid = (s.paid || 0) + amt;
+  saveDb();
+  refreshAllViews();
+  notify("Cleared pending due of ₹" + amt + " for " + s.name);
+}
+
+function deleteSupplier(id) {
+  if (!db.isAdmin) return notify("Unlock Admin mode (PIN 1234) to delete supplier!", "danger");
+  db.suppliers = db.suppliers.filter(function(s) { return s.id !== id; });
+  saveDb();
+  refreshAllViews();
+  notify("Supplier removed.");
+}
+
+function addDailyExpense() {
+  const title = document.getElementById("expTitle").value.trim();
+  const amount = parseFloat(document.getElementById("expAmt").value) || 0;
+  if (!title || !amount) return notify("Enter expense detail and amount!", "warning");
+
+  db.expenses.unshift({ id: Date.now(), title: title, amount: amount, date: new Date().toLocaleDateString() });
+  saveDb();
+  document.getElementById("expTitle").value = "";
+  document.getElementById("expAmt").value = "";
+  refreshAllViews();
+  notify("Daily expense recorded: ₹" + amount);
+}
+
+function deleteExpense(id) {
+  db.expenses = db.expenses.filter(function(e) { return e.id !== id; });
+  saveDb();
+  refreshAllViews();
+}
+
+function renderKhataAndExpenses() {
+  const sTbl = document.getElementById("supplierTable");
+  const payPills = document.getElementById("paySupPills");
+  payPills.innerHTML = "";
+
+  let sHtml = "<tr><th>Supplier & Stock Supplied</th><th>Bill / Paid</th><th>Pending Due</th><th>Action</th></tr>";
+  db.suppliers.forEach(function(s) {
+    const due = Math.max(0, (s.totalBill || 0) - (s.paid || 0));
+
+    const pBtn = document.createElement("button");
+    pBtn.type = "button";
+    pBtn.className = "opt-pill" + (db.selectedPaySupId === s.id ? " active" : "");
+    pBtn.innerText = s.name + " (Due: ₹" + due + ")";
+    pBtn.onclick = function() {
+      db.selectedPaySupId = s.id;
+      renderKhataAndExpenses();
+    };
+    payPills.appendChild(pBtn);
+
+    sHtml +=
+      "<tr>" +
+        "<td><strong>" + s.name + "</strong><br><span style='color:var(--text-muted);'>Stock: " + (s.items || "All") + " (" + (s.phone || "") + ")</span></td>" +
+        "<td>Bill: ₹" + s.totalBill + "<br>Paid: ₹" + s.paid + "</td>" +
+        "<td style='color:" + (due > 0 ? "var(--danger)" : "var(--success)") + "; font-weight:800;'>₹" + due + "</td>" +
+        "<td style='white-space:nowrap;'>" +
+          "<button class='btn btn-outline btn-sm' onclick='editSupplier(" + s.id + ")'>Edit</button> " +
+          (due > 0 ? "<button class='btn btn-secondary btn-sm' onclick='paySupplierDue(" + s.id + ", " + due + ")'>Full Pay</button> " : "") +
+          "<button class='btn-cancel' onclick='deleteSupplier(" + s.id + ")'>❌</button>" +
+        "</td>" +
+      "</tr>";
+  });
+  sTbl.innerHTML = sHtml;
+
+  const eTbl = document.getElementById("expenseTable");
+  let eHtml = "<tr><th>Date</th><th>Expense Detail</th><th>Amount ₹</th><th>❌</th></tr>";
+  db.expenses.forEach(function(e) {
+    eHtml +=
+      "<tr>" +
+        "<td>" + e.date + "</td>" +
+        "<td><strong>" + e.title + "</strong></td>" +
+        "<td style='color:var(--danger);font-weight:800;'>₹" + e.amount + "</td>" +
+        "<td><button class='btn-cancel' onclick='deleteExpense(" + e.id + ")'>❌</button></td>" +
+      "</tr>";
+  });
+  eTbl.innerHTML = eHtml;
+}
+
+/* ============================================================================
+   10. SMART DASHBOARD, BEST SELLERS & WHATSAPP/SMS OWNER REPORT
+   ============================================================================ */
+function renderDashboard() {
+  const totalSales = db.sales.reduce(function(s, x) { return s + (x.finalTotal || 0); }, 0);
+  const collected = db.sales.reduce(function(s, x) { return s + (x.cash || 0) + (x.upi || 0); }, 0);
+  const totalExp = db.expenses.reduce(function(s, x) { return s + (x.amount || 0); }, 0);
+  const supDue = db.suppliers.reduce(function(s, x) { return s + Math.max(0, (x.totalBill || 0) - (x.paid || 0)); }, 0);
+
+  document.getElementById("statTotalSales").innerText = "₹" + totalSales;
+  document.getElementById("statCollected").innerText = "₹" + collected;
+  document.getElementById("statExpenses").innerText = "₹" + totalExp;
+  document.getElementById("statSupplierDue").innerText = "₹" + supDue;
+
+  const sortedBest = db.products.slice().sort(function(a, b) { return (b.soldCount || 0) - (a.soldCount || 0); }).slice(0, 5);
+  document.getElementById("bestSellersList").innerHTML = sortedBest.map(function(p, i) {
+    return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f1f5f9;'>" +
+      "<span><strong>#" + (i + 1) + " " + p.name + "</strong> (" + p.color + ")</span>" +
+      "<span class='badge badge-set'>" + (p.soldCount || 0) + " Sold</span>" +
+    "</div>";
+  }).join("");
+
+  const lowItems = db.products.filter(function(p) { return ((Number(p.qtyFloor) || 0) + (Number(p.qtyGodown) || 0)) <= 2; });
+  document.getElementById("lowStockList").innerHTML = lowItems.length
+    ? lowItems.map(function(p) {
+        return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f1f5f9;'>" +
+          "<span><strong>" + p.name + "</strong> (" + p.color + ", " + p.size + ")</span>" +
+          "<span class='badge badge-low'>Only " + ((Number(p.qtyFloor)||0)+(Number(p.qtyGodown)||0)) + " Left</span>" +
+        "</div>";
+      }).join("")
+    : "<div style='color:var(--success); padding:6px 0;'>✅ All bags are well-stocked!</div>";
+
+  const hTbl = document.getElementById("salesHistoryTable");
+  let hHtml = "<tr><th>Bill / Date</th><th>Customer & Items</th><th>MRP / Final</th><th>Staff</th><th>❌</th></tr>";
+  db.sales.slice(0, 25).forEach(function(s) {
+    hHtml +=
+      "<tr>" +
+        "<td><strong>" + s.billNo + "</strong><br><span style='font-size:0.66rem;color:var(--text-muted);'>" + s.date + "</span></td>" +
+        "<td><strong>" + s.customer + "</strong><br>" + s.itemsSummary + "</td>" +
+        "<td>MRP: ₹" + s.mrpTotal + "<br><strong style='color:var(--primary);'>Final: ₹" + s.finalTotal + "</strong></td>" +
+        "<td>" + s.staffName + "</td>" +
+        "<td><button class='btn-cancel' onclick='deleteSaleRecord(" + s.id + ")'>❌</button></td>" +
+      "</tr>";
+  });
+  hTbl.innerHTML = hHtml;
+}
+
+function deleteSaleRecord(id) {
+  if (!db.isAdmin) return notify("Unlock Admin mode (PIN 1234) to delete sales records!", "danger");
+  db.sales = db.sales.filter(function(s) { return s.id !== id; });
+  saveDb();
+  renderDashboard();
+  notify("Sale entry removed.");
+}
+
+function sendReportToOwner(channel) {
+  const totalSales = db.sales.reduce(function(s, x) { return s + (x.finalTotal || 0); }, 0);
+  const totalExp = db.expenses.reduce(function(s, x) { return s + (x.amount || 0); }, 0);
+  const msg = [
+    "*" + db.profile.name + " - Daily Report*",
+    "Date: " + new Date().toLocaleDateString(),
+    "Total Bills: " + db.sales.length,
+    "Total Sales: ₹" + totalSales,
+    "Daily Expenses: ₹" + totalExp,
+    "Net Balance: ₹" + (totalSales - totalExp)
+  ].join("\n");
+
+  const phone = db.profile.phone.replace(/\D/g, "");
+  if (channel === "whatsapp") {
+    window.open("https://wa.me/91" + phone + "?text=" + encodeURIComponent(msg), "_blank");
+  } else {
+    window.location.href = "sms:" + phone + "?body=" + encodeURIComponent(msg);
+  }
+}
+
+/* ============================================================================
+   11. ADMIN PERMISSIONS, PROFILE LOGO (CAMERA/GALLERY) & MASTER TOGGLES
+   ============================================================================ */
+const TOGGLE_LABELS = [
+  { key: "bargain", title: "Smart Bargaining Calculator", desc: "Enter negotiated price & auto-compute discount" },
+  { key: "floorGuard", title: "Minimum Floor Price Protection", desc: "Require Admin PIN if bargain is below floor cost" },
+  { key: "gst", title: "Auto GST Calculator (All Slabs)", desc: "Enable 0%, 5%, 12%, 18%, 28% GST on bills" },
+  { key: "splitPay", title: "Split Payment (Cash + UPI + Credit)", desc: "Divide customer bill into multiple payment modes" },
+  { key: "directSave", title: "Direct Save (No-Bill Fast Entry)", desc: "Show 1-tap direct save button on billing screen" },
+  { key: "whatsappSms", title: "WhatsApp & SMS Digital Receipts", desc: "Send instant digital bills to customer phone" },
+  { key: "setBreak", title: "Set Breaking Tool (3-Pc / 2-Pc Split)", desc: "Break luggage sets into individual loose stock" },
+  { key: "warranty", title: "Warranty & Serial Number Field", desc: "Record bag warranty validity on counter bills" },
+  { key: "staffManage", title: "Staff & Incentive Calculator", desc: "Track staff sales & calculate manual incentives" },
+  { key: "shiftManage", title: "Shift & Cash Drawer Tracker", desc: "Track opening cash and shift status" },
+  { key: "supplierKhata", title: "Supplier Khata & Pending Dues", desc: "Track wholesale purchases and vendor balances" },
+  { key: "dailyExpenses", title: "Daily Shop Expenses Tracker", desc: "Log daily shop expenses out of cash drawer" },
+  { key: "voiceMic", title: "Microphone Voice Search", desc: "Speak bag names to search inventory hands-free" },
+  { key: "lowStockAlert", title: "Low Stock Alert Badges", desc: "Highlight bags with 2 or fewer pieces left" }
+];
+
+function renderAdminAndToggles() {
+  const statusBtn = document.getElementById("adminStatusBtn");
+  const badge = document.getElementById("adminBadgeText");
+  if (db.isAdmin) {
+    statusBtn.innerText = "🔓 Admin";
+    badge.className = "badge badge-ok";
+    badge.innerText = "Unlocked (Admin Full Control)";
+  } else {
+    statusBtn.innerText = "🔒 Staff";
+    badge.className = "badge badge-low";
+    badge.innerText = "Locked (Staff Mode)";
+  }
+
+  const container = document.getElementById("masterTogglesList");
+  container.innerHTML = "";
+  TOGGLE_LABELS.forEach(function(t) {
+    const row = document.createElement("div");
+    row.className = "toggle-row";
+    row.innerHTML =
+      "<div>" +
+        "<div class='toggle-title'>" + t.title + "</div>" +
+        "<div class='toggle-desc'>" + t.desc + "</div>" +
+      "</div>" +
+      "<label class='switch'>" +
+        "<input type='checkbox' " + (db.toggles[t.key] ? "checked" : "") + " onchange=\"flipMasterToggle('" + t.key + "', this.checked)\">" +
+        "<span class='slider'></span>" +
+      "</label>";
+    container.appendChild(row);
+  });
+
+  document.getElementById("boxBargain").style.display = db.toggles.bargain ? "block" : "none";
+  document.getElementById("floorPriceBadge").style.display = db.toggles.floorGuard ? "inline-block" : "none";
+  document.getElementById("boxGst").style.display = db.toggles.gst ? "block" : "none";
+  document.getElementById("boxSplitPay").style.display = db.toggles.splitPay ? "block" : "none";
+  document.getElementById("btnDirectSaveAction").style.display = db.toggles.directSave ? "inline-flex" : "none";
+  document.getElementById("btnWaBillAction").style.display = db.toggles.whatsappSms ? "inline-flex" : "none";
+  document.getElementById("btnSmsBillAction").style.display = db.toggles.whatsappSms ? "inline-flex" : "none";
+  document.getElementById("boxSetBreakTool").style.display = db.toggles.setBreak ? "block" : "none";
+  document.getElementById("boxWarranty").style.display = db.toggles.warranty ? "block" : "none";
+  document.getElementById("boxStaffManage").style.display = db.toggles.staffManage ? "block" : "none";
+  document.getElementById("boxShiftManage").style.display = db.toggles.shiftManage ? "block" : "none";
+  document.getElementById("boxSupplierKhata").style.display = db.toggles.supplierKhata ? "block" : "none";
+  document.getElementById("boxDailyExpenses").style.display = db.toggles.dailyExpenses ? "block" : "none";
+  document.getElementById("btnMicSearch").style.display = db.toggles.voiceMic ? "inline-flex" : "none";
+}
+
+function unlockAdmin() {
+  const pin = document.getElementById("admPinInput").value.trim();
+  if (pin === db.adminPin) {
+    db.isAdmin = true;
+    saveDb();
+    document.getElementById("admPinInput").value = "";
+    renderAdminAndToggles();
+    notify("Admin Mode Unlocked! You have full permission over all switches.");
+  } else {
+    notify("Incorrect Admin PIN! Default is 1234", "danger");
+  }
+}
+
+function lockAdmin() {
+  db.isAdmin = false;
+  saveDb();
+  renderAdminAndToggles();
+  notify("Admin Mode Locked. Switched to Staff Mode.");
+}
+
+function changeAdminPin() {
+  if (!db.isAdmin) return notify("Unlock Admin first (PIN 1234) to change PIN!", "danger");
+  const np = document.getElementById("newAdminPinInput").value.trim();
+  if (np.length < 4) return notify("Enter at least 4 digits for new PIN", "warning");
+  db.adminPin = np;
+  saveDb();
+  document.getElementById("newAdminPinInput").value = "";
+  notify("Admin PIN updated successfully!");
+}
+
+function flipMasterToggle(key, stateVal) {
+  if (!db.isAdmin) {
+    notify("Locked! Enter Admin PIN (1234) above to turn features ON or OFF.", "danger");
+    renderAdminAndToggles();
+    return;
+  }
+  db.toggles[key] = stateVal;
+  saveDb();
+  renderAdminAndToggles();
+  renderPosProducts();
+  recalcBillTotals();
+  notify("Feature '" + key + "' turned " + (stateVal ? "ON" : "OFF"));
+}
+
+function handleLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  compressImageFile(file, 260, 0.82, function(compressedLogo) {
+    db.profile.logo = compressedLogo;
+    saveDb();
+    applyProfileHeader();
+    notify("Shop Profile Logo updated & compressed for lifetime storage!");
+  });
+}
+
+function removeShopLogo() {
+  db.profile.logo = "";
+  saveDb();
+  applyProfileHeader();
+  notify("Shop Logo removed.");
+}
+
+function saveBusinessProfile() {
+  db.profile.name = document.getElementById("profName").value.trim() || db.profile.name;
+  db.profile.tagline = document.getElementById("profTag").value.trim() || db.profile.tagline;
+  db.profile.phone = document.getElementById("profPhone").value.trim() || db.profile.phone;
+  db.profile.address = document.getElementById("profAddr").value.trim() || db.profile.address;
+  db.profile.gstin = document.getElementById("profGst").value.trim();
+  db.profile.footer = document.getElementById("profFooter").value.trim();
+  saveDb();
+  applyProfileHeader();
+  notify("Business profile, GST & bill terms updated across all bills!");
+}
+
+function applyProfileHeader() {
+  document.getElementById("hdrStoreName").innerText = db.profile.name;
+  document.getElementById("hdrTagline").innerText = db.profile.tagline + (db.profile.gstin ? " • GST: " + db.profile.gstin : "");
+  document.getElementById("profName").value = db.profile.name;
+  document.getElementById("profTag").value = db.profile.tagline;
+  document.getElementById("profPhone").value = db.profile.phone;
+  document.getElementById("profAddr").value = db.profile.address;
+  document.getElementById("profGst").value = db.profile.gstin || "";
+  document.getElementById("profFooter").value = db.profile.footer || "";
+
+  const logoBox = document.getElementById("hdrLogoBox");
+  const adminLogoBox = document.getElementById("adminLogoPreviewBox");
+  if (db.profile.logo) {
+    const imgMarkup = '<img src="' + db.profile.logo + '" style="width:100%;height:100%;object-fit:cover;">';
+    logoBox.innerHTML = imgMarkup;
+    adminLogoBox.innerHTML = imgMarkup;
+  } else {
+    logoBox.innerText = "🧳";
+    adminLogoBox.innerText = "🧳";
+  }
+}
+
+function downloadBackupFile() {
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "Luggage_POS_Backup_" + new Date().toISOString().slice(0, 10) + ".json";
+  a.click();
+  notify("Backup file downloaded!");
+}
+
+function restoreBackupFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (parsed && Array.isArray(parsed.products)) {
+        db = parsed;
+        saveDb();
+        refreshAllViews();
+        applyProfileHeader();
+        notify("All business data restored successfully!");
+      }
+    } catch (err) {
+      notify("Invalid backup file format!", "danger");
+    }
+  };
+  reader.readAsText(file);
+}
+
+function refreshAccountCalculations() {
+  saveDb();
+  refreshAllViews();
+  notify("All accounts, stock counts, and ledgers refreshed!");
+}
+
+function runVoiceSearch() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return notify("Voice search works in Chrome browser on Android.", "warning");
+  const rec = new SpeechRecognition();
+  rec.lang = db.lang === "hi" ? "hi-IN" : (db.lang === "gu" ? "gu-IN" : "en-IN");
+  notify("Listening... Speak bag name, brand or color!");
+  rec.onresult = function(e) {
+    const spoken = e.results[0][0].transcript;
+    document.getElementById("posSearch").value = spoken;
+    renderPosProducts();
+    notify("Searched for: " + spoken);
+  };
+  rec.start();
+}
+
+function refreshAllViews() {
+  renderCategories();
+  renderPosProducts();
+  renderCart();
+  renderStockTableAndSets();
+  renderStaffAndShift();
+  renderKhataAndExpenses();
+  renderDashboard();
+  renderAdminAndToggles();
+}
+
+function bootApp() {
+  applyProfileHeader();
+  setLanguage(db.lang || "en");
+  refreshAllViews();
+}
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootApp);
+} else {
+  bootApp();
+}
+</script>
+</body>
+</html>
