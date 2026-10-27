@@ -6,6 +6,9 @@
 <meta name="theme-color" content="#1e3a8a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Luggage POS">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧳</text></svg>">
 <title>Smart Luggage & Bags POS Pro</title>
 <style>
 :root {
@@ -221,7 +224,7 @@ input:focus, textarea:focus {
   box-shadow: 0 0 0 2px rgba(37,99,235,0.15);
 }
 
-/* Inline Option Pills (Replaces native <select> popups) */
+/* Inline Option Pills */
 .pill-group {
   display: flex;
   gap: 5px;
@@ -504,6 +507,32 @@ input:checked + .slider:before { transform: translateX(20px); }
   border-bottom: 1px solid #e2e8f0;
   text-align: left;
 }
+
+/* Clean Thermal Receipt Print Styles */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  #inlineReceiptPreview,
+  #inlineReceiptPreview * {
+    visibility: visible !important;
+  }
+  #inlineReceiptPreview .no-print {
+    display: none !important;
+  }
+  #inlineReceiptPreview {
+    display: block !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 320px !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -577,7 +606,7 @@ input:checked + .slider:before { transform: translateX(20px); }
           <!-- Cart Items -->
           <div id="cartContainer" class="cart-list"></div>
 
-          <!-- Custom Extra Item / Quick Counter Entry (When item isn't in stock list yet) -->
+          <!-- Custom Extra Item / Quick Counter Entry -->
           <div style="margin-bottom:8px; padding:6px; background:#f8fafc; border-radius:8px; border:1px dashed var(--border);">
             <div style="font-size:0.68rem; font-weight:700; color:var(--text-muted); margin-bottom:4px;" id="lblQuickCustomItem">+ Quick Custom Bag / Repair / Accessory Entry:</div>
             <div style="display:flex; gap:5px;">
@@ -619,16 +648,16 @@ input:checked + .slider:before { transform: translateX(20px); }
 
             <!-- Inline Admin Override if Bargain < Floor Price -->
             <div id="inlineFloorOverride" style="display:none; margin-top:6px; padding:6px; background:#fee2e2; border-radius:6px; border:1px solid #fca5a5;">
-              <div style="font-size:0.72rem; color:#991b1b; font-weight:700; margin-bottom:4px;">⚠️ Below Floor Cost! Enter Admin PIN (1234):</div>
+              <div style="font-size:0.72rem; color:#991b1b; font-weight:700; margin-bottom:4px;">⚠️ Below Floor Cost! Enter Admin PIN:</div>
               <div style="display:flex; gap:6px;">
-                <input type="password" id="overridePinInput" placeholder="PIN (1234)">
+                <input type="password" id="overridePinInput" placeholder="Admin PIN">
                 <button class="btn btn-danger btn-sm" onclick="approveFloorOverride()">Approve</button>
                 <button class="btn-cancel" onclick="resetBargainToMrp()">❌</button>
               </div>
             </div>
           </div>
 
-          <!-- Auto GST Calculator (All Slabs + Inclusive/Exclusive Toggle) -->
+          <!-- Auto GST Calculator -->
           <div id="boxGst" class="card" style="padding:8px; margin-bottom:8px; background:#f8fafc; display:none;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
               <label style="font-size:0.7rem; font-weight:700;">Auto GST Slab:</label>
@@ -682,7 +711,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
           <!-- Customer Info -->
           <div class="grid-2" style="margin-bottom:8px;">
-            <input type="text" id="custName" placeholder="Customer Name (Optional)">
+            <input type="text" id="custName" placeholder="Customer Name (Required for Credit)">
             <input type="tel" id="custPhone" placeholder="WhatsApp / Mobile No.">
           </div>
 
@@ -698,7 +727,7 @@ input:checked + .slider:before { transform: translateX(20px); }
 
           <!-- Inline Receipt Preview Box -->
           <div id="inlineReceiptPreview" style="display:none; margin-top:10px; padding:10px; background:#fff; border:2px dashed #64748b; border-radius:8px; font-family:monospace; font-size:0.74rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <div class="no-print" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
               <strong>RECEIPT PREVIEW</strong>
               <div style="display:flex; gap:6px;">
                 <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ Print</button>
@@ -834,11 +863,7 @@ input:checked + .slider:before { transform: translateX(20px); }
       </div>
       <div class="form-group">
         <label>2. Tap Which Piece Was Sold / Separated:</label>
-        <div class="pill-group" id="brkPiecePills">
-          <button type="button" class="opt-pill active" onclick="selectBreakPiece('Cabin (20 inch)', this)">Cabin (20 inch) Sold</button>
-          <button type="button" class="opt-pill" onclick="selectBreakPiece('Medium (24 inch)', this)">Medium (24 inch) Sold</button>
-          <button type="button" class="opt-pill" onclick="selectBreakPiece('Large (28 inch)', this)">Large (28 inch) Sold</button>
-        </div>
+        <div class="pill-group" id="brkPiecePills"></div>
       </div>
       <button class="btn btn-secondary" onclick="breakSelectedSet()">✂️ Break Set & Keep Remaining Bags in Stock</button>
     </div>
@@ -933,10 +958,61 @@ input:checked + .slider:before { transform: translateX(20px); }
   </div>
 
   <!-- ========================================================
-       TAB 4: SUPPLIER KHATA & DAILY EXPENSES
+       TAB 4: CUSTOMER UDHAAR KHATA, SUPPLIER KHATA & EXPENSES
        ======================================================== -->
   <div id="viewKhata" class="view">
 
+    <!-- NEW: CUSTOMER CREDIT (UDHAAR) KHATA TRACKER -->
+    <div class="card" id="boxCustomerKhata">
+      <div class="card-header">
+        <span id="custKhataFormTitle">🤝 Customer Credit (Udhaar) Khata — Collect Pending Dues</span>
+        <button class="btn-cancel" onclick="resetCustKhataForm()">Clear ❌</button>
+      </div>
+      <p style="font-size:0.73rem; color:var(--text-muted); margin-bottom:8px;">
+        Bills saved with <strong>Credit (Udhaar) ₹</strong> on the Billing screen automatically appear here! You can also manually add a customer or record partial/full payments below.
+      </p>
+      <input type="hidden" id="editCustKhataId">
+      <div class="grid-4">
+        <div class="form-group">
+          <label>Customer Name *</label>
+          <input type="text" id="ckName" placeholder="e.g. Rajesh Patel">
+        </div>
+        <div class="form-group">
+          <label>WhatsApp / Mobile</label>
+          <input type="tel" id="ckPhone" placeholder="9876543210">
+        </div>
+        <div class="form-group">
+          <label>Total Credit Given ₹</label>
+          <input type="number" id="ckTotalCredit" placeholder="2500">
+        </div>
+        <div class="form-group">
+          <label>Already Received ₹</label>
+          <div style="display:flex; gap:6px;">
+            <input type="number" id="ckReceived" placeholder="500">
+            <button class="btn btn-primary btn-sm" onclick="saveCustomerKhataEntry()">💾 Save</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Customer Udhaar Collection Bar -->
+      <div class="highlight-box" style="margin-top:6px;">
+        <label style="font-size:0.72rem; font-weight:800; color:#854d0e; display:block; margin-bottom:5px;">
+          💵 Receive Payment from Customer (Tap Customer Below):
+        </label>
+        <div class="pill-group" id="collectCustPills" style="margin-bottom:6px;"></div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <input type="number" id="customCustCollectAmt" placeholder="Amount Received ₹ (e.g. 1000)" style="flex:1; min-width:150px;">
+          <button class="btn btn-success btn-sm" onclick="recordCustomerUdhaarCollection('Cash')">+ Receive Cash ₹</button>
+          <button class="btn btn-primary btn-sm" onclick="recordCustomerUdhaarCollection('UPI')">+ Receive UPI ₹</button>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto; margin-top:8px;">
+        <table class="table-list" id="customerKhataTable"></table>
+      </div>
+    </div>
+
+    <!-- SUPPLIER KHATA -->
     <div class="card" id="boxSupplierKhata">
       <div class="card-header">
         <span id="supFormTitle">📒 Supplier Khata (Bills, Partial Payments & Stock Supplied)</span>
@@ -987,6 +1063,7 @@ input:checked + .slider:before { transform: translateX(20px); }
       </div>
     </div>
 
+    <!-- DAILY EXPENSES -->
     <div class="card" id="boxDailyExpenses">
       <div class="card-header">
         <span>💸 Daily Shop Expenses Tracker</span>
@@ -1036,12 +1113,16 @@ input:checked + .slider:before { transform: translateX(20px); }
           <div class="val" id="statCollected" style="color:var(--success);">₹0</div>
         </div>
         <div class="stat-card">
+          <div class="lbl">Customer Udhaar Due</div>
+          <div class="val" id="statCustomerDue" style="color:var(--danger);">₹0</div>
+        </div>
+        <div class="stat-card">
           <div class="lbl">Daily Shop Expenses</div>
-          <div class="val" id="statExpenses" style="color:var(--danger);">₹0</div>
+          <div class="val" id="statExpenses" style="color:var(--warning);">₹0</div>
         </div>
         <div class="stat-card">
           <div class="lbl">Supplier Pending Khata</div>
-          <div class="val" id="statSupplierDue" style="color:var(--warning);">₹0</div>
+          <div class="val" id="statSupplierDue" style="color:var(--primary);">₹0</div>
         </div>
       </div>
 
@@ -1169,7 +1250,7 @@ input:checked + .slider:before { transform: translateX(20px); }
         <span>🎛️ Master Feature Toggle Control Center (ON / OFF)</span>
       </div>
       <p style="font-size:0.73rem; color:var(--text-muted); margin-bottom:8px;">
-        Unlock Admin above (PIN: 1234) to turn any feature ON or OFF globally.
+        Unlock Admin above (Default PIN: 1234) to turn any feature ON or OFF globally.
       </p>
       <div id="masterTogglesList"></div>
     </div>
@@ -1216,6 +1297,29 @@ input:checked + .slider:before { transform: translateX(20px); }
 
 <script>
 /* ============================================================================
+   0. SAFE HTML ESCAPER & PIECE HELPER
+   ============================================================================ */
+function escHtml(str) {
+  return String(str == null ? "" : str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function getPiecesForSetSize(sizeStr) {
+  if (!sizeStr) return ["Cabin (20 inch)", "Medium (24 inch)", "Large (28 inch)"];
+  if (sizeStr.indexOf("2-Piece Set (M+S)") !== -1) {
+    return ["Cabin (20 inch)", "Medium (24 inch)"];
+  }
+  if (sizeStr.indexOf("2-Piece Set (L+M)") !== -1) {
+    return ["Medium (24 inch)", "Large (28 inch)"];
+  }
+  return ["Cabin (20 inch)", "Medium (24 inch)", "Large (28 inch)"];
+}
+
+/* ============================================================================
    1. SMART IMAGE COMPRESSOR (Prevents Camera Photos from Overflowing Storage)
    ============================================================================ */
 function compressImageFile(file, maxWidth, quality, callback) {
@@ -1247,12 +1351,13 @@ function compressImageFile(file, maxWidth, quality, callback) {
 }
 
 /* ============================================================================
-   2. DUAL-ENGINE PERSISTENT DATABASE (LocalStorage + IndexedDB Mirror)
+   2. PERSISTENT DATABASE
    ============================================================================ */
 const INITIAL_DATA = {
   isAdmin: false,
   adminPin: "1234",
   lang: "en",
+  nextInvoiceSeq: 1001,
   activeStaffId: 1,
   activeGstSlab: 18,
   activeGstMode: "exclusive",
@@ -1262,6 +1367,7 @@ const INITIAL_DATA = {
   selectedBreakPiece: "Cabin (20 inch)",
   selectedCalcStaffId: 2,
   selectedPaySupId: 1,
+  selectedCollectCustId: 0,
   profile: {
     name: "Royal Bags & Luggage",
     tagline: "Retail & Wholesale POS",
@@ -1282,6 +1388,7 @@ const INITIAL_DATA = {
     warranty: true,
     staffManage: true,
     shiftManage: true,
+    customerKhata: true,
     supplierKhata: true,
     dailyExpenses: true,
     voiceMic: true,
@@ -1304,6 +1411,7 @@ const INITIAL_DATA = {
     note: "Regular Shift",
     startedAt: "09:30 AM"
   },
+  customerKhata: [],
   suppliers: [
     { id: 1, name: "VIP Official Distributor", phone: "9820011223", items: "VIP, Skybags Trolley Sets", totalBill: 85000, paid: 60000 },
     { id: 2, name: "Mumbai Bag House", phone: "9825099887", items: "Safari, Backpacks, Duffles", totalBill: 42000, paid: 30000 }
@@ -1320,7 +1428,18 @@ function loadDbSafe() {
     const raw = window.localStorage ? localStorage.getItem("LUGGAGE_POS_V4") : null;
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (parsed && Array.isArray(parsed.products)) return parsed;
+      if (parsed && Array.isArray(parsed.products)) {
+        if (!parsed.nextInvoiceSeq) {
+          parsed.nextInvoiceSeq = 1001 + (Array.isArray(parsed.sales) ? parsed.sales.length : 0);
+        }
+        if (!Array.isArray(parsed.customerKhata)) {
+          parsed.customerKhata = [];
+        }
+        if (parsed.toggles && typeof parsed.toggles.customerKhata === "undefined") {
+          parsed.toggles.customerKhata = true;
+        }
+        return Object.assign({}, JSON.parse(JSON.stringify(INITIAL_DATA)), parsed);
+      }
     }
   } catch (e) {}
   return JSON.parse(JSON.stringify(INITIAL_DATA));
@@ -1330,6 +1449,7 @@ let db = loadDbSafe();
 let cart = [];
 let selectedCategory = "All";
 let tempUploadedImage = "";
+let photoRemovedExplicitly = false;
 let floorOverrideApproved = false;
 
 function saveDb() {
@@ -1337,7 +1457,9 @@ function saveDb() {
     if (window.localStorage) {
       localStorage.setItem("LUGGAGE_POS_V4", JSON.stringify(db));
     }
-  } catch (e) {}
+  } catch (e) {
+    notify("Storage full! Please download a backup and remove old photos.", "danger");
+  }
 }
 
 /* ============================================================================
@@ -1378,7 +1500,7 @@ const LANG_PACK = {
     btnSmsBillAction: "📩 SMS Receipt",
     btnPreviewBillAction: "🧾 View / Print Bill",
     posSearchPlaceholder: "Search bag name, brand, color, size...",
-    custNamePlaceholder: "Customer Name (Optional)",
+    custNamePlaceholder: "Customer Name (Required for Credit)",
     custPhonePlaceholder: "WhatsApp / Mobile No."
   },
   hi: {
@@ -1398,7 +1520,7 @@ const LANG_PACK = {
     btnSmsBillAction: "📩 SMS बिल",
     btnPreviewBillAction: "🧾 बिल देखें / प्रिंट",
     posSearchPlaceholder: "बैग का नाम, ब्रांड, रंग या साइज खोजें...",
-    custNamePlaceholder: "ग्राहक का नाम",
+    custNamePlaceholder: "ग्राहक का नाम (उधार के लिए ज़रूरी)",
     custPhonePlaceholder: "ग्राहक का मोबाइल नंबर"
   },
   gu: {
@@ -1418,7 +1540,7 @@ const LANG_PACK = {
     btnSmsBillAction: "📩 SMS બિલ",
     btnPreviewBillAction: "🧾 બિલ જુઓ / પ્રિન્ટ",
     posSearchPlaceholder: "બેગનું નામ, બ્રાન્ડ, કલર કે સાઈઝ શોધો...",
-    custNamePlaceholder: "ગ્રાહકનું નામ",
+    custNamePlaceholder: "ગ્રાહકનું નામ (ઉધાર માટે જરૂરી)",
     custPhonePlaceholder: "ગ્રાહકનો મોબાઇલ નંબર"
   }
 };
@@ -1468,7 +1590,7 @@ function openAdminTab() {
 }
 
 /* ============================================================================
-   6. POS COUNTER BILLING, INLINE SET-BREAKING, BARGAINING & SPLIT PAY
+   6. POS COUNTER BILLING, SAFE SET-BREAKING, BARGAINING & SPLIT PAY
    ============================================================================ */
 function renderCategories() {
   const bar = document.getElementById("posCategoryBar");
@@ -1478,7 +1600,7 @@ function renderCategories() {
   manageBar.innerHTML = "";
   stockCatPills.innerHTML = "";
 
-  db.categories.forEach(function(cat) {
+  db.categories.forEach(function(cat, idx) {
     const pill = document.createElement("button");
     pill.className = "cat-pill" + (selectedCategory === cat ? " active" : "");
     pill.innerText = cat;
@@ -1502,7 +1624,12 @@ function renderCategories() {
 
       const mPill = document.createElement("span");
       mPill.className = "cat-pill";
-      mPill.innerHTML = cat + ' <strong style="color:#dc2626; margin-left:5px; cursor:pointer;" onclick="removeCategory(\'' + cat.replace(/'/g, "") + '\')">❌</strong>';
+      mPill.innerText = cat + " ";
+      const delBtn = document.createElement("strong");
+      delBtn.style.cssText = "color:#dc2626; margin-left:5px; cursor:pointer;";
+      delBtn.innerText = "❌";
+      delBtn.onclick = function() { removeCategoryByIndex(idx); };
+      mPill.appendChild(delBtn);
       manageBar.appendChild(mPill);
     }
   });
@@ -1518,13 +1645,18 @@ function addCategory() {
     renderCategories();
     document.getElementById("newCatInput").value = "";
     notify("Category added: " + val);
+  } else {
+    notify("Category already exists!", "warning");
   }
 }
 
-function removeCategory(cat) {
-  if (!db.isAdmin) return notify("Unlock Admin mode in Admin tab (PIN 1234) to remove categories", "danger");
-  db.categories = db.categories.filter(function(c) { return c !== cat; });
+function removeCategoryByIndex(catIndex) {
+  if (!db.isAdmin) return notify("Unlock Admin mode in Admin tab to remove categories", "danger");
+  const cat = db.categories[catIndex];
+  if (!cat || cat === "All") return;
+  db.categories.splice(catIndex, 1);
   if (selectedCategory === cat) selectedCategory = "All";
+  if (db.selectedStockCat === cat) db.selectedStockCat = db.categories[1] || "All";
   saveDb();
   renderCategories();
   renderPosProducts();
@@ -1544,21 +1676,23 @@ function toggleInlineSetDrawer(prodId, ev) {
   }
 }
 
+function getReservedCountInCart(prodId) {
+  return cart.filter(function(c) {
+    return (c.id === prodId && !c.isCustomItem && !c.isLooseSoldPiece) || (c.isLooseSoldPiece && c.parentSetId === prodId);
+  }).length;
+}
+
 function sellSinglePieceFromPos(prodId, soldSize, ev) {
   if (ev) ev.stopPropagation();
   const parent = db.products.find(function(x) { return x.id === prodId; });
   if (!parent) return;
   const totalAvail = (Number(parent.qtyFloor) || 0) + (Number(parent.qtyGodown) || 0);
-  if (totalAvail <= 0) return notify("No set in stock to break!", "danger");
+  const reserved = getReservedCountInCart(prodId);
+  if (reserved >= totalAvail) return notify("No more sets available in stock to break!", "danger");
 
-  if (parent.qtyFloor > 0) parent.qtyFloor -= 1;
-  else parent.qtyGodown -= 1;
-
-  let allPieces = ["Cabin (20 inch)", "Medium (24 inch)", "Large (28 inch)"];
-  if (parent.size.indexOf("2-Piece Set (M+S)") !== -1) {
-    allPieces = ["Cabin (20 inch)", "Medium (24 inch)"];
-  } else if (parent.size.indexOf("2-Piece Set (L+M)") !== -1) {
-    allPieces = ["Medium (24 inch)", "Large (28 inch)"];
+  const allPieces = getPiecesForSetSize(parent.size);
+  if (allPieces.indexOf(soldSize) === -1) {
+    return notify(soldSize + " is not part of " + parent.size, "warning");
   }
 
   const divisor = allPieces.length;
@@ -1566,29 +1700,12 @@ function sellSinglePieceFromPos(prodId, soldSize, ev) {
   const singleFloor = Math.round(parent.floor / divisor);
   const remaining = allPieces.filter(function(sz) { return sz !== soldSize; });
 
-  // Create remaining loose bags in stock with exact brand, color & remaining sizes
-  remaining.forEach(function(remSize) {
-    db.products.unshift({
-      id: Date.now() + Math.floor(Math.random() * 10000),
-      name: parent.name + " [Remaining Set - " + soldSize + " Sold]",
-      brand: parent.brand,
-      category: parent.category,
-      size: remSize,
-      color: parent.color,
-      floor: singleFloor,
-      mrp: singleMrp,
-      qtyFloor: 1,
-      qtyGodown: 0,
-      supplier: parent.supplier,
-      soldCount: 0,
-      image: parent.image
-    });
-  });
-
-  // Add the sold single piece directly into the active counter bill
   cart.push({
-    id: Date.now() + 999,
+    id: Date.now() + Math.floor(Math.random() * 1000),
     isLooseSoldPiece: true,
+    parentSetId: parent.id,
+    soldPieceSize: soldSize,
+    remainingSizes: remaining,
     name: parent.name + " (" + soldSize + " Only)",
     brand: parent.brand,
     color: parent.color,
@@ -1597,11 +1714,11 @@ function sellSinglePieceFromPos(prodId, soldSize, ev) {
     mrp: singleMrp
   });
 
-  saveDb();
+  floorOverrideApproved = false;
   const newMrpSum = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
   document.getElementById("bargainFinalInput").value = newMrpSum;
   refreshAllViews();
-  notify("Sold 1 piece (" + soldSize + ") from set! Remaining (" + remaining.join(", ") + ") saved in stock under " + parent.color + ".");
+  notify("Added " + soldSize + " to bill! Remaining (" + remaining.join(", ") + ") will be added to stock on checkout.");
 }
 
 function renderPosProducts() {
@@ -1632,22 +1749,25 @@ function renderPosProducts() {
 
       let setSplitBtnHtml = "";
       if (isSet && db.toggles.setBreak && totalQty > 0) {
+        const validPieces = getPiecesForSetSize(p.size);
+        const pieceButtonsHtml = validPieces.map(function(piece) {
+          return '<button type="button" class="opt-pill" style="font-size:0.65rem; padding:4px;" onclick="sellSinglePieceFromPos(' + p.id + ', \'' + piece + '\', event)">Sell ' + escHtml(piece) + '</button>';
+        }).join("");
+
         setSplitBtnHtml =
           '<button type="button" class="btn btn-outline btn-sm" style="margin-top:5px; width:100%; font-size:0.66rem; padding:4px;" onclick="toggleInlineSetDrawer(' + p.id + ', event)">✂️ Sell 1 Bag from Set</button>' +
           '<div class="set-split-drawer" id="setDrawer_' + p.id + '">' +
             '<div style="font-size:0.64rem; font-weight:700; color:var(--text-muted); margin-bottom:3px;">Tap piece to sell separately:</div>' +
             '<div style="display:flex; flex-direction:column; gap:3px;">' +
-              '<button type="button" class="opt-pill" style="font-size:0.65rem; padding:4px;" onclick="sellSinglePieceFromPos(' + p.id + ', \'Cabin (20 inch)\', event)">Sell Cabin (20")</button>' +
-              '<button type="button" class="opt-pill" style="font-size:0.65rem; padding:4px;" onclick="sellSinglePieceFromPos(' + p.id + ', \'Medium (24 inch)\', event)">Sell Medium (24")</button>' +
-              (p.size.indexOf("3-Piece") !== -1 ? '<button type="button" class="opt-pill" style="font-size:0.65rem; padding:4px;" onclick="sellSinglePieceFromPos(' + p.id + ', \'Large (28 inch)\', event)">Sell Large (28")</button>' : '') +
+              pieceButtonsHtml +
             '</div>' +
           '</div>';
       }
 
       card.innerHTML =
         imgHtml +
-        '<div class="product-title" onclick="addItemToCart(' + p.id + ')">' + p.name + '</div>' +
-        '<div class="product-meta" onclick="addItemToCart(' + p.id + ')">' + p.brand + ' • <strong>' + p.color + '</strong><br>' + p.size + '<br>Shop: ' + p.qtyFloor + ' | Godown: ' + p.qtyGodown + '</div>' +
+        '<div class="product-title" onclick="addItemToCart(' + p.id + ')">' + escHtml(p.name) + '</div>' +
+        '<div class="product-meta" onclick="addItemToCart(' + p.id + ')">' + escHtml(p.brand) + ' • <strong>' + escHtml(p.color) + '</strong><br>' + escHtml(p.size) + '<br>Shop: ' + p.qtyFloor + ' | Godown: ' + p.qtyGodown + '</div>' +
         '<div class="product-foot" onclick="addItemToCart(' + p.id + ')">' +
           '<span>₹' + p.mrp + '</span>' +
           '<span class="badge ' + (totalQty <= 2 ? 'badge-low' : (isSet ? 'badge-set' : 'badge-ok')) + '">' +
@@ -1668,7 +1788,7 @@ function addItemToCart(prodId) {
   const p = db.products.find(function(x) { return x.id === prodId; });
   if (!p) return;
   const totalAvail = (Number(p.qtyFloor) || 0) + (Number(p.qtyGodown) || 0);
-  const inCartCount = cart.filter(function(c) { return c.id === prodId; }).length;
+  const inCartCount = getReservedCountInCart(prodId);
   if (inCartCount >= totalAvail) {
     return notify("Out of stock for " + p.name + "!", "danger");
   }
@@ -1683,7 +1803,7 @@ function addItemToCart(prodId) {
 function addCustomCartItem() {
   const name = document.getElementById("customItemName").value.trim();
   const price = parseFloat(document.getElementById("customItemPrice").value) || 0;
-  if (!name || !price) return notify("Enter custom item name and price ₹!", "warning");
+  if (!name || price <= 0) return notify("Enter custom item name and valid price ₹!", "warning");
 
   cart.push({
     id: Date.now(),
@@ -1727,21 +1847,27 @@ function resetBargainToMrp() {
   recalcBillTotals();
 }
 
+function syncGstPillsUI() {
+  const slabVal = Number(db.activeGstSlab) || 0;
+  const modeVal = db.activeGstMode || "exclusive";
+  document.querySelectorAll("#gstSlabPills .opt-pill").forEach(function(btn) {
+    btn.className = "opt-pill" + (btn.innerText === slabVal + "%" ? " active" : "");
+  });
+  document.getElementById("gstModeExcl").className = "opt-pill" + (modeVal === "exclusive" ? " active" : "");
+  document.getElementById("gstModeIncl").className = "opt-pill" + (modeVal === "inclusive" ? " active" : "");
+}
+
 function setGstSlab(slabVal) {
   db.activeGstSlab = slabVal;
   saveDb();
-  const pills = document.querySelectorAll("#gstSlabPills .opt-pill");
-  pills.forEach(function(btn) {
-    btn.className = "opt-pill" + (btn.innerText === slabVal + "%" ? " active" : "");
-  });
+  syncGstPillsUI();
   recalcBillTotals();
 }
 
 function setGstMode(modeVal) {
   db.activeGstMode = modeVal;
   saveDb();
-  document.getElementById("gstModeExcl").className = "opt-pill" + (modeVal === "exclusive" ? " active" : "");
-  document.getElementById("gstModeIncl").className = "opt-pill" + (modeVal === "inclusive" ? " active" : "");
+  syncGstPillsUI();
   recalcBillTotals();
 }
 
@@ -1769,8 +1895,8 @@ function renderCart() {
     row.className = "cart-row";
     row.innerHTML =
       '<div>' +
-        '<strong>' + item.name + '</strong>' +
-        '<div style="font-size:0.68rem; color:var(--text-muted);">' + item.brand + ' | ' + item.color + ' | ' + item.size + '</div>' +
+        '<strong>' + escHtml(item.name) + '</strong>' +
+        '<div style="font-size:0.68rem; color:var(--text-muted);">' + escHtml(item.brand) + ' | ' + escHtml(item.color) + ' | ' + escHtml(item.size) + '</div>' +
       '</div>' +
       '<div style="display:flex; align-items:center; gap:8px;">' +
         '<span style="font-weight:800;">₹' + item.mrp + '</span>' +
@@ -1782,13 +1908,19 @@ function renderCart() {
   recalcBillTotals();
 }
 
+function getAgreedBasePrice() {
+  const sumMrp = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
+  let agreedBase = parseFloat(document.getElementById("bargainFinalInput").value);
+  if (isNaN(agreedBase) || agreedBase < 0 || !db.toggles.bargain) agreedBase = sumMrp;
+  return agreedBase;
+}
+
 function recalcBillTotals() {
   const sumMrp = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
   const sumFloor = cart.reduce(function(s, i) { return s + (Number(i.floor) || 0); }, 0);
   document.getElementById("cartTotalMrp").innerText = "₹" + sumMrp;
 
-  let agreedBase = parseFloat(document.getElementById("bargainFinalInput").value);
-  if (isNaN(agreedBase) || !db.toggles.bargain) agreedBase = sumMrp;
+  const agreedBase = getAgreedBasePrice();
 
   const overrideBox = document.getElementById("inlineFloorOverride");
   if (db.toggles.floorGuard && agreedBase < sumFloor && !db.isAdmin && !floorOverrideApproved && cart.length > 0) {
@@ -1813,12 +1945,12 @@ function recalcBillTotals() {
         const tax = Math.round((agreedBase * slab) / 100);
         grandTotal = agreedBase + tax;
         document.getElementById("gstBreakdownText").innerText =
-          "Taxable: ₹" + agreedBase + " + GST (" + slab + "%): ₹" + tax + " (CGST ₹" + (tax/2) + " + SGST ₹" + (tax/2) + ")";
+          "Taxable: ₹" + agreedBase + " + GST (" + slab + "%): ₹" + tax + " (CGST ₹" + (tax / 2) + " + SGST ₹" + (tax / 2) + ")";
       } else {
         const tax = Math.round(agreedBase - (agreedBase * 100 / (100 + slab)));
         grandTotal = agreedBase;
         document.getElementById("gstBreakdownText").innerText =
-          "Inclusive GST (" + slab + "%): ₹" + tax + " (CGST ₹" + (tax/2).toFixed(1) + " + SGST ₹" + (tax/2).toFixed(1) + ")";
+          "Inclusive GST (" + slab + "%): ₹" + tax + " (CGST ₹" + (tax / 2).toFixed(1) + " + SGST ₹" + (tax / 2).toFixed(1) + ")";
       }
     } else {
       document.getElementById("gstBreakdownText").innerText = "0% GST (Nil Rated)";
@@ -1839,7 +1971,7 @@ function approveFloorOverride() {
     document.getElementById("overridePinInput").value = "";
     notify("Floor price override approved by Admin!");
   } else {
-    notify("Wrong Admin PIN! Default is 1234", "danger");
+    notify("Wrong Admin PIN!", "danger");
   }
 }
 
@@ -1869,9 +2001,9 @@ function setQuickSplit(mode) {
 function autoBalanceSplit(changedField) {
   const totalText = document.getElementById("grandTotalPayable").innerText.replace("₹", "");
   const total = parseFloat(totalText) || 0;
-  let cash = parseFloat(document.getElementById("payCashInput").value) || 0;
-  let upi = parseFloat(document.getElementById("payUpiInput").value) || 0;
-  let credit = parseFloat(document.getElementById("payCreditInput").value) || 0;
+  let cash = Math.max(0, parseFloat(document.getElementById("payCashInput").value) || 0);
+  let upi = Math.max(0, parseFloat(document.getElementById("payUpiInput").value) || 0);
+  let credit = Math.max(0, parseFloat(document.getElementById("payCreditInput").value) || 0);
 
   if (changedField === "cash") {
     upi = Math.max(0, total - cash - credit);
@@ -1879,6 +2011,9 @@ function autoBalanceSplit(changedField) {
   } else if (changedField === "upi") {
     credit = Math.max(0, total - cash - upi);
     document.getElementById("payCreditInput").value = credit;
+  } else if (changedField === "credit") {
+    cash = Math.max(0, total - upi - credit);
+    document.getElementById("payCashInput").value = cash;
   }
 }
 
@@ -1894,15 +2029,60 @@ function processCheckout(mode) {
   if (cart.length === 0) return notify("Tap at least 1 bag from Available Stock to bill!", "warning");
 
   const sumFloor = cart.reduce(function(s, i) { return s + (Number(i.floor) || 0); }, 0);
+  const agreedBase = getAgreedBasePrice();
   const totalPayable = parseFloat(document.getElementById("grandTotalPayable").innerText.replace("₹", "")) || 0;
 
-  if (db.toggles.floorGuard && totalPayable < sumFloor && !db.isAdmin && !floorOverrideApproved) {
+  if (db.toggles.floorGuard && agreedBase < sumFloor && !db.isAdmin && !floorOverrideApproved) {
     document.getElementById("inlineFloorOverride").style.display = "block";
-    return notify("Bargain amount is below floor cost! Enter Admin PIN (1234).", "danger");
+    return notify("Bargain amount is below floor cost! Enter Admin PIN.", "danger");
   }
 
+  let cash = parseFloat(document.getElementById("payCashInput").value) || 0;
+  let upi = parseFloat(document.getElementById("payUpiInput").value) || 0;
+  let credit = parseFloat(document.getElementById("payCreditInput").value) || 0;
+
+  if (!db.toggles.splitPay) {
+    cash = totalPayable;
+    upi = 0;
+    credit = 0;
+  } else if (Math.round(cash + upi + credit) !== Math.round(totalPayable)) {
+    return notify("Split payment total (₹" + (cash + upi + credit) + ") must equal Net Payable (₹" + totalPayable + ")!", "warning");
+  }
+
+  const rawCustName = document.getElementById("custName").value.trim();
+  const custPhone = document.getElementById("custPhone").value.trim();
+  if (credit > 0 && !rawCustName) {
+    return notify("Please enter Customer Name when giving Credit (Udhaar)!", "warning");
+  }
+  const custName = rawCustName || "Walk-in Customer";
+
   cart.forEach(function(item) {
-    if (!item.isLooseSoldPiece && !item.isCustomItem) {
+    if (item.isLooseSoldPiece && item.parentSetId) {
+      const parent = db.products.find(function(p) { return p.id === item.parentSetId; });
+      if (parent) {
+        if (parent.qtyFloor > 0) parent.qtyFloor -= 1;
+        else if (parent.qtyGodown > 0) parent.qtyGodown -= 1;
+        parent.soldCount = (parent.soldCount || 0) + 1;
+
+        (item.remainingSizes || []).forEach(function(remSize) {
+          db.products.unshift({
+            id: Date.now() + Math.floor(Math.random() * 100000),
+            name: parent.name + " [Remaining Set - " + item.soldPieceSize + " Sold]",
+            brand: parent.brand,
+            category: parent.category,
+            size: remSize,
+            color: parent.color,
+            floor: item.floor,
+            mrp: item.mrp,
+            qtyFloor: 1,
+            qtyGodown: 0,
+            supplier: parent.supplier,
+            soldCount: 0,
+            image: parent.image
+          });
+        });
+      }
+    } else if (!item.isCustomItem) {
       const prod = db.products.find(function(p) { return p.id === item.id; });
       if (prod) {
         if (prod.qtyFloor > 0) prod.qtyFloor -= 1;
@@ -1918,19 +2098,46 @@ function processCheckout(mode) {
     staffObj.billsCount = (staffObj.billsCount || 0) + 1;
   }
 
-  const cash = parseFloat(document.getElementById("payCashInput").value) || 0;
-  const upi = parseFloat(document.getElementById("payUpiInput").value) || 0;
-  const credit = parseFloat(document.getElementById("payCreditInput").value) || 0;
-  const custName = document.getElementById("custName").value.trim() || "Walk-in Customer";
-  const custPhone = document.getElementById("custPhone").value.trim();
   const warranty = document.getElementById("billWarrantyInput").value.trim();
   const sumMrp = cart.reduce(function(s, i) { return s + (Number(i.mrp) || 0); }, 0);
 
-  const billNo = "INV-" + String(db.sales.length + 1001);
+  if (!db.nextInvoiceSeq) db.nextInvoiceSeq = 1001 + db.sales.length;
+  const billNo = "INV-" + String(db.nextInvoiceSeq++);
   const dateStr = new Date().toLocaleString();
+  const itemsSummaryStr = cart.map(function(c) { return c.name; }).join(", ");
+
+  // Auto-sync Customer Udhaar (Credit) into Customer Khata
+  if (credit > 0) {
+    if (!Array.isArray(db.customerKhata)) db.customerKhata = [];
+    let existingCust = db.customerKhata.find(function(ck) {
+      return (custPhone && ck.phone === custPhone) || ck.name.toLowerCase() === custName.toLowerCase();
+    });
+    if (existingCust) {
+      existingCust.totalCredit = (existingCust.totalCredit || 0) + credit;
+      if (custPhone && !existingCust.phone) existingCust.phone = custPhone;
+      existingCust.lastItems = billNo + ": " + itemsSummaryStr;
+      existingCust.updatedAt = dateStr;
+      db.selectedCollectCustId = existingCust.id;
+    } else {
+      const newCustId = Date.now() + 55;
+      db.customerKhata.unshift({
+        id: newCustId,
+        name: custName,
+        phone: custPhone,
+        totalCredit: credit,
+        received: 0,
+        lastItems: billNo + ": " + itemsSummaryStr,
+        updatedAt: dateStr
+      });
+      db.selectedCollectCustId = newCustId;
+    }
+  }
+
   const itemLines = cart.map(function(c, i) {
     return (i + 1) + ". " + c.name + " (" + c.color + ", " + c.size + ") - MRP ₹" + c.mrp;
   }).join("\n");
+
+  const gstReceiptLine = db.toggles.gst ? document.getElementById("gstBreakdownText").innerText : "";
 
   const receiptLines = [
     db.profile.name,
@@ -1944,9 +2151,10 @@ function processCheckout(mode) {
     itemLines,
     "--------------------------------",
     "Total MRP: ₹" + sumMrp,
-    "Bargain Savings: ₹" + Math.max(0, sumMrp - totalPayable),
-    "Final Agreed Amount: ₹" + totalPayable,
-    "Paid: Cash ₹" + cash + " | UPI ₹" + upi + (credit > 0 ? " | Due ₹" + credit : ""),
+    "Bargain Savings: ₹" + Math.max(0, sumMrp - agreedBase),
+    gstReceiptLine,
+    "Net Payable Amount: ₹" + totalPayable,
+    "Paid: Cash ₹" + cash + " | UPI ₹" + upi + (credit > 0 ? " | Due (Udhaar) ₹" + credit : ""),
     warranty ? ("Warranty/SN: " + warranty) : "",
     db.profile.footer ? ("Note: " + db.profile.footer) : "",
     "--------------------------------",
@@ -1961,7 +2169,7 @@ function processCheckout(mode) {
     date: dateStr,
     customer: custName,
     phone: custPhone,
-    itemsSummary: cart.map(function(c) { return c.name; }).join(", "),
+    itemsSummary: itemsSummaryStr,
     mrpTotal: sumMrp,
     finalTotal: totalPayable,
     cash: cash,
@@ -1976,17 +2184,22 @@ function processCheckout(mode) {
   if (mode === "whatsapp") {
     const cleanPhone = custPhone.replace(/\D/g, "");
     const phoneParam = cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone;
-    const url = "https://wa.me/" + phoneParam + "?text=" + encodeURIComponent(receiptLines);
+    const url = (phoneParam ? "https://wa.me/" + phoneParam : "https://wa.me/") + "?text=" + encodeURIComponent(receiptLines);
     window.open(url, "_blank");
   } else if (mode === "sms") {
-    window.location.href = "sms:" + custPhone + "?body=" + encodeURIComponent(receiptLines);
+    const cleanPhone = custPhone.replace(/\D/g, "");
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const sep = isIos ? "&" : "?";
+    window.location.href = "sms:" + cleanPhone + sep + "body=" + encodeURIComponent(receiptLines);
   }
 
   clearCart();
   document.getElementById("custName").value = "";
   document.getElementById("custPhone").value = "";
   refreshAllViews();
-  notify(mode === "direct" ? "Direct Entry Saved! ₹" + totalPayable : "Bill " + billNo + " Saved!");
+  notify(credit > 0
+    ? "Bill " + billNo + " saved! ₹" + credit + " added to " + custName + "'s Udhaar Khata."
+    : (mode === "direct" ? "Direct Entry Saved! ₹" + totalPayable : "Bill " + billNo + " Saved!"));
 }
 
 function previewLastBill() {
@@ -2007,13 +2220,9 @@ function previewLastBill() {
    ============================================================================ */
 function selectSizePill(sizeVal, btnEl) {
   db.selectedStockSize = sizeVal;
-  document.querySelectorAll("#stSizePills .opt-pill").forEach(function(b) { b.classList.remove("active"); });
-  if (btnEl) btnEl.classList.add("active");
-}
-
-function selectBreakPiece(pieceVal, btnEl) {
-  db.selectedBreakPiece = pieceVal;
-  document.querySelectorAll("#brkPiecePills .opt-pill").forEach(function(b) { b.classList.remove("active"); });
+  document.querySelectorAll("#stSizePills .opt-pill").forEach(function(b) {
+    b.className = "opt-pill" + (b.innerText === sizeVal ? " active" : "");
+  });
   if (btnEl) btnEl.classList.add("active");
 }
 
@@ -2022,15 +2231,18 @@ function handlePhotoSelect(event) {
   if (!file) return;
   compressImageFile(file, 360, 0.78, function(compressedDataUrl) {
     tempUploadedImage = compressedDataUrl;
+    photoRemovedExplicitly = false;
     const thumb = document.getElementById("stPhotoThumb");
     thumb.src = compressedDataUrl;
     thumb.style.display = "inline-block";
     document.getElementById("photoPreviewStatus").innerText = "✅ Photo compressed & ready!";
   });
+  event.target.value = "";
 }
 
 function clearTempStockPhoto() {
   tempUploadedImage = "";
+  photoRemovedExplicitly = true;
   const thumb = document.getElementById("stPhotoThumb");
   thumb.src = "";
   thumb.style.display = "none";
@@ -2065,7 +2277,8 @@ function saveStockItem() {
       existing.qtyFloor = qtyFloor;
       existing.qtyGodown = qtyGodown;
       existing.supplier = supplier;
-      if (tempUploadedImage) existing.image = tempUploadedImage;
+      if (photoRemovedExplicitly) existing.image = "";
+      else if (tempUploadedImage) existing.image = tempUploadedImage;
     }
     notify("Stock item updated!");
   } else {
@@ -2099,18 +2312,23 @@ function editStockItem(id) {
   document.getElementById("stName").value = p.name;
   document.getElementById("stBrand").value = p.brand;
   db.selectedStockCat = p.category;
-  db.selectedStockSize = p.size;
+  selectSizePill(p.size);
   document.getElementById("stColor").value = p.color;
   document.getElementById("stFloor").value = p.floor;
   document.getElementById("stMrp").value = p.mrp;
   document.getElementById("stQtyFloor").value = p.qtyFloor;
   document.getElementById("stQtyGodown").value = p.qtyGodown;
   document.getElementById("stSupplier").value = p.supplier || "";
+  photoRemovedExplicitly = false;
   if (p.image) {
     tempUploadedImage = p.image;
     const thumb = document.getElementById("stPhotoThumb");
     thumb.src = p.image;
     thumb.style.display = "inline-block";
+    document.getElementById("photoPreviewStatus").innerText = "Current saved photo";
+  } else {
+    clearTempStockPhoto();
+    photoRemovedExplicitly = false;
   }
   document.getElementById("stockFormTitle").innerText = "Editing: " + p.name;
   renderCategories();
@@ -2118,7 +2336,7 @@ function editStockItem(id) {
 }
 
 function deleteStockItem(id) {
-  if (!db.isAdmin) return notify("Unlock Admin mode in Admin tab (PIN 1234) to delete stock!", "danger");
+  if (!db.isAdmin) return notify("Unlock Admin mode in Admin tab to delete stock!", "danger");
   db.products = db.products.filter(function(p) { return p.id !== id; });
   saveDb();
   refreshAllViews();
@@ -2136,7 +2354,32 @@ function resetStockForm() {
   document.getElementById("stQtyGodown").value = "";
   document.getElementById("stSupplier").value = "";
   clearTempStockPhoto();
+  photoRemovedExplicitly = false;
+  selectSizePill("3-Piece Set (L+M+S)");
   document.getElementById("stockFormTitle").innerText = "Add / Update Bag & Luggage Stock";
+}
+
+function renderBreakPiecePillsForSelectedSet() {
+  const pieceBox = document.getElementById("brkPiecePills");
+  pieceBox.innerHTML = "";
+  const parent = db.products.find(function(p) { return p.id === db.selectedBreakSetId; });
+  const validPieces = parent ? getPiecesForSetSize(parent.size) : ["Cabin (20 inch)", "Medium (24 inch)", "Large (28 inch)"];
+
+  if (validPieces.indexOf(db.selectedBreakPiece) === -1) {
+    db.selectedBreakPiece = validPieces[0];
+  }
+
+  validPieces.forEach(function(piece) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "opt-pill" + (db.selectedBreakPiece === piece ? " active" : "");
+    btn.innerText = piece + " Sold";
+    btn.onclick = function() {
+      db.selectedBreakPiece = piece;
+      renderBreakPiecePillsForSelectedSet();
+    };
+    pieceBox.appendChild(btn);
+  });
 }
 
 function renderStockTableAndSets() {
@@ -2172,8 +2415,8 @@ function renderStockTableAndSets() {
 
     html +=
       "<tr>" +
-        "<td><strong>" + p.name + "</strong><br><span style='color:var(--text-muted);'>" + p.brand + " (" + (p.supplier || "Direct") + ")</span></td>" +
-        "<td>" + p.size + "<br><strong>" + p.color + "</strong></td>" +
+        "<td><strong>" + escHtml(p.name) + "</strong><br><span style='color:var(--text-muted);'>" + escHtml(p.brand) + " (" + escHtml(p.supplier || "Direct") + ")</span></td>" +
+        "<td>" + escHtml(p.size) + "<br><strong>" + escHtml(p.color) + "</strong></td>" +
         "<td>Shop: <strong>" + p.qtyFloor + "</strong><br>Godown: <strong>" + p.qtyGodown + "</strong></td>" +
         "<td>Min: ₹" + p.floor + "<br><strong>MRP: ₹" + p.mrp + "</strong></td>" +
         "<td style='white-space:nowrap;'>" +
@@ -2183,23 +2426,22 @@ function renderStockTableAndSets() {
       "</tr>";
   });
   tbl.innerHTML = html;
+  renderBreakPiecePillsForSelectedSet();
 }
 
 function breakSelectedSet() {
   const parent = db.products.find(function(p) { return p.id === db.selectedBreakSetId; });
   if (!parent) return notify("Tap a set above to break first!", "warning");
 
+  const allPieces = getPiecesForSetSize(parent.size);
+  const soldPiece = db.selectedBreakPiece || allPieces[0];
+  if (allPieces.indexOf(soldPiece) === -1) {
+    return notify(soldPiece + " is not in " + parent.size, "danger");
+  }
+
   if (parent.qtyFloor > 0) parent.qtyFloor -= 1;
   else if (parent.qtyGodown > 0) parent.qtyGodown -= 1;
   else return notify("Selected set has 0 stock left!", "danger");
-
-  const soldPiece = db.selectedBreakPiece || "Cabin (20 inch)";
-  let allPieces = ["Cabin (20 inch)", "Medium (24 inch)", "Large (28 inch)"];
-  if (parent.size.indexOf("2-Piece Set (M+S)") !== -1) {
-    allPieces = ["Cabin (20 inch)", "Medium (24 inch)"];
-  } else if (parent.size.indexOf("2-Piece Set (L+M)") !== -1) {
-    allPieces = ["Medium (24 inch)", "Large (28 inch)"];
-  }
 
   const remainingPieces = allPieces.filter(function(sz) { return sz !== soldPiece; });
   const divisor = allPieces.length;
@@ -2289,9 +2531,11 @@ function resetStaffForm() {
 }
 
 function removeStaffMember(id) {
-  if (!db.isAdmin) return notify("Unlock Admin mode (PIN 1234) to remove staff!", "danger");
+  if (!db.isAdmin) return notify("Unlock Admin mode to remove staff!", "danger");
   if (db.staff.length <= 1) return notify("At least 1 staff profile is required.", "warning");
   db.staff = db.staff.filter(function(s) { return s.id !== id; });
+  if (db.activeStaffId === id) db.activeStaffId = db.staff[0].id;
+  if (db.selectedCalcStaffId === id) db.selectedCalcStaffId = db.staff[0].id;
   saveDb();
   renderStaffAndShift();
   notify("Staff removed.");
@@ -2313,6 +2557,7 @@ function renderStaffAndShift() {
     pBtn.innerText = s.name;
     pBtn.onclick = function() {
       db.activeStaffId = s.id;
+      saveDb();
       renderStaffAndShift();
     };
     posPills.appendChild(pBtn);
@@ -2323,6 +2568,7 @@ function renderStaffAndShift() {
     cBtn.innerText = s.name + " (₹" + s.salesTotal + ")";
     cBtn.onclick = function() {
       db.selectedCalcStaffId = s.id;
+      document.getElementById("calcCommPct").value = s.commPct || 0;
       renderStaffAndShift();
     };
     calcPills.appendChild(cBtn);
@@ -2330,7 +2576,7 @@ function renderStaffAndShift() {
     const estInc = Math.round((s.salesTotal * (s.commPct || 0)) / 100);
     html +=
       "<tr>" +
-        "<td><strong>" + s.name + "</strong><br><span style='color:var(--text-muted);'>" + (s.phone || "") + "</span></td>" +
+        "<td><strong>" + escHtml(s.name) + "</strong><br><span style='color:var(--text-muted);'>" + escHtml(s.phone || "") + "</span></td>" +
         "<td>" + s.billsCount + "</td>" +
         "<td><strong>₹" + s.salesTotal + "</strong></td>" +
         "<td style='color:var(--success);font-weight:800;'>₹" + estInc + " (" + s.commPct + "%)</td>" +
@@ -2362,8 +2608,119 @@ function calculateStaffIncentive() {
 }
 
 /* ============================================================================
-   9. SUPPLIER KHATA & DAILY EXPENSES
+   9. CUSTOMER UDHAAR KHATA, SUPPLIER KHATA & DAILY EXPENSES
    ============================================================================ */
+function saveCustomerKhataEntry() {
+  const editId = document.getElementById("editCustKhataId").value;
+  const name = document.getElementById("ckName").value.trim();
+  const phone = document.getElementById("ckPhone").value.trim();
+  const totalCredit = parseFloat(document.getElementById("ckTotalCredit").value) || 0;
+  const received = parseFloat(document.getElementById("ckReceived").value) || 0;
+  if (!name) return notify("Enter Customer Name!", "warning");
+
+  if (!Array.isArray(db.customerKhata)) db.customerKhata = [];
+
+  if (editId) {
+    const existing = db.customerKhata.find(function(c) { return c.id === parseInt(editId); });
+    if (existing) {
+      existing.name = name;
+      existing.phone = phone;
+      existing.totalCredit = totalCredit;
+      existing.received = received;
+      existing.updatedAt = new Date().toLocaleDateString();
+    }
+    notify("Customer Udhaar record updated!");
+  } else {
+    const newId = Date.now();
+    db.customerKhata.unshift({
+      id: newId,
+      name: name,
+      phone: phone,
+      totalCredit: totalCredit,
+      received: received,
+      lastItems: "Manual Khata Entry",
+      updatedAt: new Date().toLocaleDateString()
+    });
+    db.selectedCollectCustId = newId;
+    notify("Customer Udhaar account added!");
+  }
+  saveDb();
+  resetCustKhataForm();
+  refreshAllViews();
+}
+
+function editCustomerKhata(id) {
+  const c = (db.customerKhata || []).find(function(x) { return x.id === id; });
+  if (!c) return;
+  document.getElementById("editCustKhataId").value = c.id;
+  document.getElementById("ckName").value = c.name;
+  document.getElementById("ckPhone").value = c.phone || "";
+  document.getElementById("ckTotalCredit").value = c.totalCredit || 0;
+  document.getElementById("ckReceived").value = c.received || 0;
+  document.getElementById("custKhataFormTitle").innerText = "Editing Customer Khata: " + c.name;
+  window.scrollTo(0, 0);
+}
+
+function resetCustKhataForm() {
+  document.getElementById("editCustKhataId").value = "";
+  document.getElementById("ckName").value = "";
+  document.getElementById("ckPhone").value = "";
+  document.getElementById("ckTotalCredit").value = "";
+  document.getElementById("ckReceived").value = "";
+  document.getElementById("custKhataFormTitle").innerText = "🤝 Customer Credit (Udhaar) Khata — Collect Pending Dues";
+}
+
+function recordCustomerUdhaarCollection(payChannel) {
+  const amt = parseFloat(document.getElementById("customCustCollectAmt").value) || 0;
+  if (amt <= 0) return notify("Enter amount received ₹ first!", "warning");
+  const list = db.customerKhata || [];
+  const cust = list.find(function(x) { return x.id === db.selectedCollectCustId; }) || list[0];
+  if (!cust) return notify("No customer selected in Udhaar Khata!", "warning");
+
+  cust.received = (cust.received || 0) + amt;
+  cust.updatedAt = new Date().toLocaleDateString() + " (" + payChannel + " +₹" + amt + ")";
+  saveDb();
+  document.getElementById("customCustCollectAmt").value = "";
+  refreshAllViews();
+  notify("Received ₹" + amt + " via " + payChannel + " from " + cust.name + "!");
+}
+
+function settleFullCustomerDue(id, dueAmt) {
+  const cust = (db.customerKhata || []).find(function(x) { return x.id === id; });
+  if (!cust) return;
+  cust.received = (cust.received || 0) + dueAmt;
+  cust.updatedAt = new Date().toLocaleDateString() + " (Full Settled)";
+  saveDb();
+  refreshAllViews();
+  notify("Full due of ₹" + dueAmt + " settled for " + cust.name + "!");
+}
+
+function sendCustomerDueReminder(id) {
+  const cust = (db.customerKhata || []).find(function(x) { return x.id === id; });
+  if (!cust) return;
+  const due = Math.max(0, (cust.totalCredit || 0) - (cust.received || 0));
+  const msg = [
+    "Hello " + cust.name + ",",
+    "Payment reminder from *" + db.profile.name + "*.",
+    "Total Credit Bill: ₹" + (cust.totalCredit || 0),
+    "Received so far: ₹" + (cust.received || 0),
+    "*Pending Balance Due: ₹" + due + "*",
+    "Kindly arrange payment at your convenience. Thank you!"
+  ].join("\n");
+  const cleanPhone = (cust.phone || "").replace(/\D/g, "");
+  const phoneParam = cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone;
+  const url = (phoneParam ? "https://wa.me/" + phoneParam : "https://wa.me/") + "?text=" + encodeURIComponent(msg);
+  window.open(url, "_blank");
+}
+
+function deleteCustomerKhata(id) {
+  if (!db.isAdmin) return notify("Unlock Admin mode to delete customer khata!", "danger");
+  db.customerKhata = (db.customerKhata || []).filter(function(c) { return c.id !== id; });
+  saveDb();
+  refreshAllViews();
+  notify("Customer Khata entry removed.");
+}
+
 function saveSupplierKhata() {
   const editId = document.getElementById("editSupplierId").value;
   const name = document.getElementById("supName").value.trim();
@@ -2417,7 +2774,7 @@ function resetSupplierForm() {
 
 function recordCustomSupplierPay() {
   const amt = parseFloat(document.getElementById("customSupPayAmt").value) || 0;
-  if (!amt) return notify("Enter payment amount ₹ first!", "warning");
+  if (amt <= 0) return notify("Enter valid payment amount ₹ first!", "warning");
   const sup = db.suppliers.find(function(x) { return x.id === db.selectedPaySupId; }) || db.suppliers[0];
   if (!sup) return;
   sup.paid = (sup.paid || 0) + amt;
@@ -2437,7 +2794,7 @@ function paySupplierDue(id, amt) {
 }
 
 function deleteSupplier(id) {
-  if (!db.isAdmin) return notify("Unlock Admin mode (PIN 1234) to delete supplier!", "danger");
+  if (!db.isAdmin) return notify("Unlock Admin mode to delete supplier!", "danger");
   db.suppliers = db.suppliers.filter(function(s) { return s.id !== id; });
   saveDb();
   refreshAllViews();
@@ -2447,7 +2804,7 @@ function deleteSupplier(id) {
 function addDailyExpense() {
   const title = document.getElementById("expTitle").value.trim();
   const amount = parseFloat(document.getElementById("expAmt").value) || 0;
-  if (!title || !amount) return notify("Enter expense detail and amount!", "warning");
+  if (!title || amount <= 0) return notify("Enter expense detail and valid amount!", "warning");
 
   db.expenses.unshift({ id: Date.now(), title: title, amount: amount, date: new Date().toLocaleDateString() });
   saveDb();
@@ -2464,6 +2821,51 @@ function deleteExpense(id) {
 }
 
 function renderKhataAndExpenses() {
+  // Render Customer Credit (Udhaar) Khata
+  const cTbl = document.getElementById("customerKhataTable");
+  const cPills = document.getElementById("collectCustPills");
+  cPills.innerHTML = "";
+  const custList = db.customerKhata || [];
+
+  if (custList.length > 0 && !custList.some(function(x) { return x.id === db.selectedCollectCustId; })) {
+    db.selectedCollectCustId = custList[0].id;
+  }
+
+  let cHtml = "<tr><th>Customer & Bill Info</th><th>Credit / Received</th><th>Pending Udhaar</th><th>Action</th></tr>";
+  if (custList.length === 0) {
+    cHtml += "<tr><td colspan='4' style='text-align:center; color:var(--text-muted); padding:10px;'>No pending customer credit (Udhaar) yet.</td></tr>";
+  } else {
+    custList.forEach(function(c) {
+      const due = Math.max(0, (c.totalCredit || 0) - (c.received || 0));
+
+      const cBtn = document.createElement("button");
+      cBtn.type = "button";
+      cBtn.className = "opt-pill" + (db.selectedCollectCustId === c.id ? " active" : "");
+      cBtn.innerText = c.name + " (Due: ₹" + due + ")";
+      cBtn.onclick = function() {
+        db.selectedCollectCustId = c.id;
+        renderKhataAndExpenses();
+      };
+      cPills.appendChild(cBtn);
+
+      cHtml +=
+        "<tr>" +
+          "<td><strong>" + escHtml(c.name) + "</strong> " + (c.phone ? "(" + escHtml(c.phone) + ")" : "") +
+          "<br><span style='font-size:0.68rem; color:var(--text-muted);'>" + escHtml(c.lastItems || "") + " • " + escHtml(c.updatedAt || "") + "</span></td>" +
+          "<td>Credit: ₹" + (c.totalCredit || 0) + "<br>Recd: ₹" + (c.received || 0) + "</td>" +
+          "<td style='color:" + (due > 0 ? "var(--danger)" : "var(--success)") + "; font-weight:800;'>₹" + due + "</td>" +
+          "<td style='white-space:nowrap;'>" +
+            (due > 0 ? "<button class='btn btn-success btn-sm' onclick='settleFullCustomerDue(" + c.id + ", " + due + ")'>Full Recv</button> " : "") +
+            (due > 0 ? "<button class='btn btn-outline btn-sm' onclick='sendCustomerDueReminder(" + c.id + ")'>💬 Remind</button> " : "") +
+            "<button class='btn btn-outline btn-sm' onclick='editCustomerKhata(" + c.id + ")'>Edit</button> " +
+            "<button class='btn-cancel' onclick='deleteCustomerKhata(" + c.id + ")'>❌</button>" +
+          "</td>" +
+        "</tr>";
+    });
+  }
+  cTbl.innerHTML = cHtml;
+
+  // Render Supplier Khata
   const sTbl = document.getElementById("supplierTable");
   const payPills = document.getElementById("paySupPills");
   payPills.innerHTML = "";
@@ -2484,7 +2886,7 @@ function renderKhataAndExpenses() {
 
     sHtml +=
       "<tr>" +
-        "<td><strong>" + s.name + "</strong><br><span style='color:var(--text-muted);'>Stock: " + (s.items || "All") + " (" + (s.phone || "") + ")</span></td>" +
+        "<td><strong>" + escHtml(s.name) + "</strong><br><span style='color:var(--text-muted);'>Stock: " + escHtml(s.items || "All") + " (" + escHtml(s.phone || "") + ")</span></td>" +
         "<td>Bill: ₹" + s.totalBill + "<br>Paid: ₹" + s.paid + "</td>" +
         "<td style='color:" + (due > 0 ? "var(--danger)" : "var(--success)") + "; font-weight:800;'>₹" + due + "</td>" +
         "<td style='white-space:nowrap;'>" +
@@ -2496,13 +2898,14 @@ function renderKhataAndExpenses() {
   });
   sTbl.innerHTML = sHtml;
 
+  // Render Daily Expenses
   const eTbl = document.getElementById("expenseTable");
   let eHtml = "<tr><th>Date</th><th>Expense Detail</th><th>Amount ₹</th><th>❌</th></tr>";
   db.expenses.forEach(function(e) {
     eHtml +=
       "<tr>" +
-        "<td>" + e.date + "</td>" +
-        "<td><strong>" + e.title + "</strong></td>" +
+        "<td>" + escHtml(e.date) + "</td>" +
+        "<td><strong>" + escHtml(e.title) + "</strong></td>" +
         "<td style='color:var(--danger);font-weight:800;'>₹" + e.amount + "</td>" +
         "<td><button class='btn-cancel' onclick='deleteExpense(" + e.id + ")'>❌</button></td>" +
       "</tr>";
@@ -2515,19 +2918,22 @@ function renderKhataAndExpenses() {
    ============================================================================ */
 function renderDashboard() {
   const totalSales = db.sales.reduce(function(s, x) { return s + (x.finalTotal || 0); }, 0);
-  const collected = db.sales.reduce(function(s, x) { return s + (x.cash || 0) + (x.upi || 0); }, 0);
+  const directCollected = db.sales.reduce(function(s, x) { return s + (x.cash || 0) + (x.upi || 0); }, 0);
+  const udhaarRecovered = (db.customerKhata || []).reduce(function(s, c) { return s + (c.received || 0); }, 0);
+  const custDue = (db.customerKhata || []).reduce(function(s, c) { return s + Math.max(0, (c.totalCredit || 0) - (c.received || 0)); }, 0);
   const totalExp = db.expenses.reduce(function(s, x) { return s + (x.amount || 0); }, 0);
   const supDue = db.suppliers.reduce(function(s, x) { return s + Math.max(0, (x.totalBill || 0) - (x.paid || 0)); }, 0);
 
   document.getElementById("statTotalSales").innerText = "₹" + totalSales;
-  document.getElementById("statCollected").innerText = "₹" + collected;
+  document.getElementById("statCollected").innerText = "₹" + (directCollected + udhaarRecovered);
+  document.getElementById("statCustomerDue").innerText = "₹" + custDue;
   document.getElementById("statExpenses").innerText = "₹" + totalExp;
   document.getElementById("statSupplierDue").innerText = "₹" + supDue;
 
   const sortedBest = db.products.slice().sort(function(a, b) { return (b.soldCount || 0) - (a.soldCount || 0); }).slice(0, 5);
   document.getElementById("bestSellersList").innerHTML = sortedBest.map(function(p, i) {
     return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f1f5f9;'>" +
-      "<span><strong>#" + (i + 1) + " " + p.name + "</strong> (" + p.color + ")</span>" +
+      "<span><strong>#" + (i + 1) + " " + escHtml(p.name) + "</strong> (" + escHtml(p.color) + ")</span>" +
       "<span class='badge badge-set'>" + (p.soldCount || 0) + " Sold</span>" +
     "</div>";
   }).join("");
@@ -2536,7 +2942,7 @@ function renderDashboard() {
   document.getElementById("lowStockList").innerHTML = lowItems.length
     ? lowItems.map(function(p) {
         return "<div style='display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #f1f5f9;'>" +
-          "<span><strong>" + p.name + "</strong> (" + p.color + ", " + p.size + ")</span>" +
+          "<span><strong>" + escHtml(p.name) + "</strong> (" + escHtml(p.color) + ", " + escHtml(p.size) + ")</span>" +
           "<span class='badge badge-low'>Only " + ((Number(p.qtyFloor)||0)+(Number(p.qtyGodown)||0)) + " Left</span>" +
         "</div>";
       }).join("")
@@ -2547,10 +2953,11 @@ function renderDashboard() {
   db.sales.slice(0, 25).forEach(function(s) {
     hHtml +=
       "<tr>" +
-        "<td><strong>" + s.billNo + "</strong><br><span style='font-size:0.66rem;color:var(--text-muted);'>" + s.date + "</span></td>" +
-        "<td><strong>" + s.customer + "</strong><br>" + s.itemsSummary + "</td>" +
-        "<td>MRP: ₹" + s.mrpTotal + "<br><strong style='color:var(--primary);'>Final: ₹" + s.finalTotal + "</strong></td>" +
-        "<td>" + s.staffName + "</td>" +
+        "<td><strong>" + escHtml(s.billNo) + "</strong><br><span style='font-size:0.66rem;color:var(--text-muted);'>" + escHtml(s.date) + "</span></td>" +
+        "<td><strong>" + escHtml(s.customer) + "</strong><br>" + escHtml(s.itemsSummary) + "</td>" +
+        "<td>MRP: ₹" + s.mrpTotal + "<br><strong style='color:var(--primary);'>Final: ₹" + s.finalTotal + "</strong>" +
+        (s.credit > 0 ? "<br><span style='color:var(--danger);font-size:0.66rem;'>Udhaar: ₹" + s.credit + "</span>" : "") + "</td>" +
+        "<td>" + escHtml(s.staffName) + "</td>" +
         "<td><button class='btn-cancel' onclick='deleteSaleRecord(" + s.id + ")'>❌</button></td>" +
       "</tr>";
   });
@@ -2558,7 +2965,7 @@ function renderDashboard() {
 }
 
 function deleteSaleRecord(id) {
-  if (!db.isAdmin) return notify("Unlock Admin mode (PIN 1234) to delete sales records!", "danger");
+  if (!db.isAdmin) return notify("Unlock Admin mode to delete sales records!", "danger");
   db.sales = db.sales.filter(function(s) { return s.id !== id; });
   saveDb();
   renderDashboard();
@@ -2567,21 +2974,29 @@ function deleteSaleRecord(id) {
 
 function sendReportToOwner(channel) {
   const totalSales = db.sales.reduce(function(s, x) { return s + (x.finalTotal || 0); }, 0);
+  const directCollected = db.sales.reduce(function(s, x) { return s + (x.cash || 0) + (x.upi || 0); }, 0);
+  const udhaarRecovered = (db.customerKhata || []).reduce(function(s, c) { return s + (c.received || 0); }, 0);
+  const custDue = (db.customerKhata || []).reduce(function(s, c) { return s + Math.max(0, (c.totalCredit || 0) - (c.received || 0)); }, 0);
   const totalExp = db.expenses.reduce(function(s, x) { return s + (x.amount || 0); }, 0);
   const msg = [
     "*" + db.profile.name + " - Daily Report*",
     "Date: " + new Date().toLocaleDateString(),
     "Total Bills: " + db.sales.length,
     "Total Sales: ₹" + totalSales,
+    "Cash + UPI Collected: ₹" + (directCollected + udhaarRecovered),
+    "Customer Udhaar Due: ₹" + custDue,
     "Daily Expenses: ₹" + totalExp,
-    "Net Balance: ₹" + (totalSales - totalExp)
+    "Net Cash-in-Hand: ₹" + ((directCollected + udhaarRecovered) - totalExp)
   ].join("\n");
 
-  const phone = db.profile.phone.replace(/\D/g, "");
+  const cleanPhone = (db.profile.phone || "").replace(/\D/g, "");
+  const phoneParam = cleanPhone.length === 10 ? "91" + cleanPhone : cleanPhone;
   if (channel === "whatsapp") {
-    window.open("https://wa.me/91" + phone + "?text=" + encodeURIComponent(msg), "_blank");
+    window.open("https://wa.me/" + phoneParam + "?text=" + encodeURIComponent(msg), "_blank");
   } else {
-    window.location.href = "sms:" + phone + "?body=" + encodeURIComponent(msg);
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const sep = isIos ? "&" : "?";
+    window.location.href = "sms:" + cleanPhone + sep + "body=" + encodeURIComponent(msg);
   }
 }
 
@@ -2599,6 +3014,7 @@ const TOGGLE_LABELS = [
   { key: "warranty", title: "Warranty & Serial Number Field", desc: "Record bag warranty validity on counter bills" },
   { key: "staffManage", title: "Staff & Incentive Calculator", desc: "Track staff sales & calculate manual incentives" },
   { key: "shiftManage", title: "Shift & Cash Drawer Tracker", desc: "Track opening cash and shift status" },
+  { key: "customerKhata", title: "Customer Credit (Udhaar) Khata", desc: "Track customer credit balances & collect dues" },
   { key: "supplierKhata", title: "Supplier Khata & Pending Dues", desc: "Track wholesale purchases and vendor balances" },
   { key: "dailyExpenses", title: "Daily Shop Expenses Tracker", desc: "Log daily shop expenses out of cash drawer" },
   { key: "voiceMic", title: "Microphone Voice Search", desc: "Speak bag names to search inventory hands-free" },
@@ -2646,6 +3062,7 @@ function renderAdminAndToggles() {
   document.getElementById("boxWarranty").style.display = db.toggles.warranty ? "block" : "none";
   document.getElementById("boxStaffManage").style.display = db.toggles.staffManage ? "block" : "none";
   document.getElementById("boxShiftManage").style.display = db.toggles.shiftManage ? "block" : "none";
+  document.getElementById("boxCustomerKhata").style.display = db.toggles.customerKhata !== false ? "block" : "none";
   document.getElementById("boxSupplierKhata").style.display = db.toggles.supplierKhata ? "block" : "none";
   document.getElementById("boxDailyExpenses").style.display = db.toggles.dailyExpenses ? "block" : "none";
   document.getElementById("btnMicSearch").style.display = db.toggles.voiceMic ? "inline-flex" : "none";
@@ -2660,7 +3077,7 @@ function unlockAdmin() {
     renderAdminAndToggles();
     notify("Admin Mode Unlocked! You have full permission over all switches.");
   } else {
-    notify("Incorrect Admin PIN! Default is 1234", "danger");
+    notify("Incorrect Admin PIN!", "danger");
   }
 }
 
@@ -2672,7 +3089,7 @@ function lockAdmin() {
 }
 
 function changeAdminPin() {
-  if (!db.isAdmin) return notify("Unlock Admin first (PIN 1234) to change PIN!", "danger");
+  if (!db.isAdmin) return notify("Unlock Admin first to change PIN!", "danger");
   const np = document.getElementById("newAdminPinInput").value.trim();
   if (np.length < 4) return notify("Enter at least 4 digits for new PIN", "warning");
   db.adminPin = np;
@@ -2683,7 +3100,7 @@ function changeAdminPin() {
 
 function flipMasterToggle(key, stateVal) {
   if (!db.isAdmin) {
-    notify("Locked! Enter Admin PIN (1234) above to turn features ON or OFF.", "danger");
+    notify("Locked! Enter Admin PIN above to turn features ON or OFF.", "danger");
     renderAdminAndToggles();
     return;
   }
@@ -2704,6 +3121,7 @@ function handleLogoUpload(event) {
     applyProfileHeader();
     notify("Shop Profile Logo updated & compressed for lifetime storage!");
   });
+  event.target.value = "";
 }
 
 function removeShopLogo() {
@@ -2750,9 +3168,11 @@ function applyProfileHeader() {
 function downloadBackupFile() {
   const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
   const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
+  const objUrl = URL.createObjectURL(blob);
+  a.href = objUrl;
   a.download = "Luggage_POS_Backup_" + new Date().toISOString().slice(0, 10) + ".json";
   a.click();
+  setTimeout(function() { URL.revokeObjectURL(objUrl); }, 1000);
   notify("Backup file downloaded!");
 }
 
@@ -2764,17 +3184,21 @@ function restoreBackupFile(event) {
     try {
       const parsed = JSON.parse(e.target.result);
       if (parsed && Array.isArray(parsed.products)) {
-        db = parsed;
+        db = Object.assign({}, JSON.parse(JSON.stringify(INITIAL_DATA)), parsed);
         saveDb();
+        syncGstPillsUI();
         refreshAllViews();
         applyProfileHeader();
         notify("All business data restored successfully!");
+      } else {
+        notify("Invalid backup file structure!", "danger");
       }
     } catch (err) {
       notify("Invalid backup file format!", "danger");
     }
   };
   reader.readAsText(file);
+  event.target.value = "";
 }
 
 function refreshAccountCalculations() {
@@ -2785,7 +3209,7 @@ function refreshAccountCalculations() {
 
 function runVoiceSearch() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return notify("Voice search works in Chrome browser on Android.", "warning");
+  if (!SpeechRecognition) return notify("Voice search works in Chrome browser on Android/Desktop.", "warning");
   const rec = new SpeechRecognition();
   rec.lang = db.lang === "hi" ? "hi-IN" : (db.lang === "gu" ? "gu-IN" : "en-IN");
   notify("Listening... Speak bag name, brand or color!");
@@ -2794,6 +3218,9 @@ function runVoiceSearch() {
     document.getElementById("posSearch").value = spoken;
     renderPosProducts();
     notify("Searched for: " + spoken);
+  };
+  rec.onerror = function() {
+    notify("Could not hear clearly. Try again.", "warning");
   };
   rec.start();
 }
@@ -2811,6 +3238,7 @@ function refreshAllViews() {
 
 function bootApp() {
   applyProfileHeader();
+  syncGstPillsUI();
   setLanguage(db.lang || "en");
   refreshAllViews();
 }
